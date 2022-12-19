@@ -1,4 +1,8 @@
-<?php include("../../config/config.php") ?>
+<?php
+	include("./services/db.php");
+	include("./services/functions.php");
+?>
+
 <!doctype html>
 <html lang="en">
 
