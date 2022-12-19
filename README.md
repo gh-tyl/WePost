@@ -4,7 +4,7 @@
 ```bash
 git clone https://github.com/gh-tyl/WePost.git
 cd WePost
-cp .env.example .env
+cp ./config/config.example ./config/config.php
 git checkout develop
 git checkout -b feature/your_feature_branch
 ```
