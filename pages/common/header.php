@@ -1,6 +1,6 @@
 <?php
 	include("./services/db.php");
-	include("./services/functions.php");
+	include("./services/postServices.php");
 ?>
 
 <!doctype html>
