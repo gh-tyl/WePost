@@ -61,7 +61,7 @@
             </div>
             <div class="mb-3">
               <select class="form-select form-select-lg" name="age">
-                <option value=0 selected disabled>Select the age</option>
+                <option selected disabled>Select the age</option>
                 <?php for($cnt=15;$cnt<=80;$cnt++){
                     echo "<option value='$cnt'>$cnt years of age</option>";
                 } ?>
@@ -79,8 +79,8 @@
             </div>
             <div class="mb-3">
               <select class="form-select form-select-lg" name="role">
-                <option value="user" selected>User</option>
-                <option value="admin">Admin</option>
+                <option value="User" selected>User</option>
+                <option value="Admin">Admin</option>
               </select>
             </div>
             <button type="submit" class="btn btn-primary">Register</button>

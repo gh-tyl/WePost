@@ -7,11 +7,18 @@
         $lname   = $_POST['lname'];
         $email   = $_POST['email'];
         $pass    = $_POST['pass'];
-        $gender  = $_POST['gender'];
-        $age     = $_POST['age'];
-        $country = $_POST['country'];
         $image   = $_FILES['image'];
         $role    = $_POST['role'];
+
+        // Optional Data Null check Logic
+        if(isset($_POST['gender'])) $gender = $_POST['gender'];
+        else $gender = "";
+
+        if(isset($_POST['age'])) $age = $_POST['age'];
+        else $age = 0;
+
+        if(isset($_POST['country'])) $country = $_POST['country'];
+        else $country = "";
 
         // Password Check Logic
         if(strlen($pass) < 8){
@@ -20,7 +27,9 @@
          }
 
         // Uploaded Image Check Logic
-        if($image==null) $imgurl = ' ';
+        if($image['size']==0) {
+            $imgurl = null;
+        }
         else {
             $targetDir = "../../pages/user_auth/images/";
             if($image['size']<1000000){
@@ -57,20 +66,18 @@
                 "'$email'",
                 "'$pass'",
                 "'$gender'",
-                $age,
+                "$age",
                 "'$country'",
                 "'$imgurl'",
                 "'$role'"
             );
             $fieldArray = array('first_name', 'last_name', "email", 'password','gender','age','country','image_path','role');
             $result = $db->insert($tbName, $valuesArray, $fieldArray);
-            print_r($fieldArray);
-            echo "<br/>";
-            print_r($result);
+            print_r($valuesArray);
         }        
         $db->closeDb();
 
-       header("Location: ".$baseName.'pages/user_auth/register.php?msg=ok');
-       exit();
+        header("Location: ".$baseName.'pages/user_auth/register.php?msg=ok');
+        exit();
     }
 ?>
