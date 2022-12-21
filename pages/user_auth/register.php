@@ -13,6 +13,8 @@
                     echo "<strong>Success</strong> Student Added";        
                 }elseif($_GET['msg']=="passlong"){
                     echo "<strong>Warning</strong> Password should be longer than 8 characters!";
+                }elseif($_GET['msg']=="passchk"){
+                    echo "<strong>Warning</strong> Password should have at least 1 character or 1 number!";
                 }elseif($_GET['msg']=="null"){
                     echo "<strong>Warning</strong> Please input values!";
                 }
