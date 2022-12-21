@@ -1,4 +1,4 @@
-<?php include "../../config/config.sample.php"; ?>
+<?php include "../../config/config.php"; ?>
 <?php
 class user
 {
