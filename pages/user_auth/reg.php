@@ -58,6 +58,9 @@
             exit();
         }
 
+        // Password Hash Logic
+        $pass = password_hash($pass,PASSWORD_DEFAULT);
+
         // Uploaded Image Check Logic
         if($image['size']==0) {
             $imgurl = null;
