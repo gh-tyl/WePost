@@ -31,6 +31,9 @@ body{
 			<div class="collapse navbar-collapse" id="collapsibleNavId">
 				<ul class="navbar-nav me-auto mt-2 mt-lg-0">
 					<li class="nav-item">
+						<a class="nav-link active" href="<?php echo $baseName.$admin_pages."analytics_board.php" ?>" aria-current="page">Analytics Board</a>
+					</li>
+					<li class="nav-item">
 						<a class="nav-link active" href="<?php echo $baseName.$user_pages."feed.php" ?>" aria-current="page">Feed</a>
 					</li>
 					<li class="nav-item">
