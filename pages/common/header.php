@@ -1,6 +1,7 @@
 <?php
 	include("./services/db.php");
 	include("./services/postArticles.php");
+	include("./services/articleComments.php");
 ?>
 
 <!doctype html>

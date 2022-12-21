@@ -1,6 +1,6 @@
 <?php
 session_start();
-$baseName = "http://localhost/php_course/0.Exam/WePost/"; //Matheus baseName path
+$baseName = "http://localhost/php/WePost/"; 
 $mysql_root_password = "";
 $mysql_database = "wepostdb";
 $mysql_username = "root";

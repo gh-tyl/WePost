@@ -7,8 +7,11 @@
     $searchPost = $dbSrv->select('article_table', $fieldArray);
     // $joinUsers = $dbSrv->dbConnect()->query("SELECT user_table.first_name, user_table.last_name FROM user_table INNER JOIN article_table ON user_table.id = article_table.user_id;");
     $joinUsers = $dbSrv->dbConnect()->query("SELECT * FROM user_table INNER JOIN article_table ON user_table.id = article_table.user_id INNER JOIN genre_table ON genre_table.id = article_table.genre_id_01;");
+    $commentsArray = $dbSrv->dbConnect()->query("SELECT `article_id`, `comment`, `datetime` FROM `comment_table`");
   if ($joinUsers) {
     $posts = $joinUsers->fetch_all(MYSQLI_ASSOC);
+    $commentsArray = $commentsArray->fetch_all(MYSQLI_ASSOC);
+    
     // print_r($posts[0]);
     // echo "<hr>";
     // print_r($genres);
@@ -33,7 +36,7 @@
       <?php
         if(!empty($posts)){
           foreach($posts as $post){
-            generatePost($post);
+            generatePost($post,$commentsArray);
           }
         }
       ?>

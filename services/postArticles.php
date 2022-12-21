@@ -1,5 +1,5 @@
 <?php
-  function generatePost($postInfoArray){
+  function generatePost($postInfoArray,$commentsArray){
     $header = "Temporary header. Have to get the info from another table!";
     //             <h1 class='display-5 fw-bold'>".$postInfoArray['genre_id_01']."</h1>
     $date = new DateTimeImmutable($postInfoArray['datetime']);
@@ -28,7 +28,18 @@
               <div class='row'>
                 <span>Date posted: ".$date."</span>
               </div>
-          </div>
+              <h3>Comments</h3>";
+        foreach($commentsArray as $comment){
+          if($comment['article_id'] != $postInfoArray['id']){
+            continue;
+          }else{
+            generateComment($comment);
+          }
+          
+
+
+        }
+    echo "</div>
         </div>
     ";
   }
