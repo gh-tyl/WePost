@@ -30,15 +30,27 @@ include("../../services/db.php");
 <body>
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-dark px-2 mb-2" style="background-color: #2C394B;">
-			<a class="navbar-brand" href="<?php echo $baseName . $user_pages . "feed.php" ?>">WePost</a>
+			<a class="navbar-brand" href="<?php echo $baseName."/pages/auth/login.php" ?>">WePost</a>
 			<div class="collapse navbar-collapse" id="collapsibleNavId">
 				<ul class="navbar-nav me-auto mt-2 mt-lg-0">
-					<li class="nav-item">
-						<a class="nav-link active" href="<?php echo $baseName . $user_pages . "feed.php" ?>"
-							aria-current="page">Feed</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link" href="<?php echo $baseName."/pages/auth/login.php" ?>">Login</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="<?php echo $baseName . $user_pages . "newPost.php" ?>">New Post</a>
+						<a class="nav-link" href="<?php echo $baseName."/pages/auth/register.php" ?>">Register</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo $baseName."/pages/articles/feed.php" ?>"
+							aria-current="page">Feed</a>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo $baseName."/pages/articles/new_post.php" ?>">New Post</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo $baseName."/pages/admin/analytics_board.php" ?>">Analytics Board</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="<?php echo $baseName."/pages/auth/logout.php" ?>">Logout</a>
 					</li>
 				</ul>
 			</div>
