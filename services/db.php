@@ -1,4 +1,4 @@
-<?php include("../../config/config.php") ?>
+<?php include "../../config/config.php"; ?>
 <?php
 class dbServices
 {
@@ -50,6 +50,25 @@ class dbServices
 		}
 		if ($where != null) {
 			$where = "WHERE $where";
+		} else {
+			$where = '';
+		}
+		$selectCmd = "SELECT $fields FROM $tbName $where";
+		$result = $this->dbcon->query($selectCmd);
+		if ($result->num_rows > 0) {
+			return $result;
+		}
+		return false;
+	}
+	function select_user($tbName, $fieldArray = null, $where = null)
+	{
+		if ($fieldArray != null) {
+			$fields = implode(',', $fieldArray);
+		} else {
+			$fields = '*';
+		}
+		if ($where != null) {
+			$where = "WHERE $tbName.email='$where'";
 		} else {
 			$where = '';
 		}
