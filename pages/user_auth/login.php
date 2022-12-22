@@ -42,14 +42,14 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             if($userInfo['password']==$pass){ //Check form pass with password from db
                 $_SESSION['logUser'] = $userInfo;
                 // echo "Password not hashed yet";
-                header("Location: " . $baseName . $user_auth . "chpass.php");
+                header("Location: ./chpass.php");
                 exit();
             }else{
                 $hashPass = password_verify($pass, $userInfo['password']); //verify password. If returns true means that password is correct
                 if($hashPass){ //On correct password
                     $_SESSION['logUser'] = $userInfo;
                     // echo "Pass already hashed";
-                    header("Location: " . $baseName . $user_pages . "feed.php");
+                    header("Location: ../articles/feed.php");
                     exit();
                 }
             }
