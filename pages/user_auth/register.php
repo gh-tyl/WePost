@@ -1,5 +1,4 @@
 <?php include '../common/header.php' ?>
-<?php include '../../services/db.php' ?>
 <main>
 
 <div class="row justify-content-center align-items-center g-2">
