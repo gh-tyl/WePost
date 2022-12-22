@@ -73,9 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if ($image['size'] == 0) {
         $imgurl = null;
     } else {
-        $targetDir = "../../pages/user_auth/images/";
+        $targetDir = "../../data/images/profiles/";
         if ($image['size'] < 1000000) {
-            if ($image['type'] == "image/jpeg" || $image['type'] == "image/jpg") {
+            // jpg or png
+            if ($image['type'] == "image/jpeg" || $image['type'] == "image/jpg" || $image['type'] == "image/png") {
                 if (getimagesize($image['tmp_name']) !== false) {
                     $targetDir = $targetDir . $fname . $lname . rand(1, 10) . ".jpg";
                     if (move_uploaded_file($image['tmp_name'], $targetDir)) {
