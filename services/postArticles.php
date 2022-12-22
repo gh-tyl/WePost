@@ -59,6 +59,4 @@ function writeInFile($fileName, $newData)
     fwrite($file, $newData);
     fclose($file);
 }
-
-
 ?>
