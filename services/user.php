@@ -1,4 +1,4 @@
-<?php include "../../config/config.php"; ?>
+<?php include "../config/config.php"; ?>
 <?php
 class user
 {
@@ -26,13 +26,16 @@ class user
 		$this->role = $role;
 	}
 
-	function login(){
+	function login()
+	{
 		//Miku
 	}
-	function register(){
+	function register()
+	{
 		//Jun
 	}
-	function logout(){
+	function logout()
+	{
 		session_destroy();
 	}
 }

@@ -1,4 +1,3 @@
 <?php
-    header('Location: ./pages/user_pages/feed.php');
-
+header('Location: ./pages/auth/login.php');
 ?>
