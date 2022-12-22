@@ -1,4 +1,3 @@
-<?php include("./config/config.sample.php") ?>
 <?php
 class dbServices
 {
