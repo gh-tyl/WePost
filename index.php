@@ -1,6 +1,4 @@
-<?php include("./pages/common/header.php") ?>
-<?php include("./pages/common/db.php") ?>
-<main>
+<?php
+    header('Location: ./pages/user_pages/feed.php');
 
-</main>
-<?php include("./pages/common/footer.php") ?>
+?>
