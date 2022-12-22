@@ -1,10 +1,10 @@
 <?php
 session_start();
-$baseName = "http://localhost/php/WePost/"; 
+$baseName = "http://localhost/";
 $mysql_root_password = "";
-$mysql_database = "wepostdb";
-$mysql_username = "root";
+$mysql_database = "";
+$mysql_username = "";
 $mysql_password = "";
-$mysql_host = "localhost";
-$mysql_port = "3306";
+$mysql_host = "";
+$mysql_port = "";
 ?>
