@@ -36,3 +36,4 @@ Homestead.json
 !.vscode/*.code-snippets
 
 # original source:
+config.php

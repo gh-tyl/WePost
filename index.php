@@ -1,5 +1,3 @@
-<?php include("./pages/common/header.php") ?>
-<main>
-
-</main>
-<?php include("./pages/common/footer.php") ?>
+<?php
+header('Location: ./pages/auth/login.php');
+?>
