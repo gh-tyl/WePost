@@ -12,7 +12,6 @@
             <br>
             <form method="post" action="<?php $_SERVER['PHP_SELF'];?>">
                 <div class="form-floating mb-3">
-
                     <div class="form-floating mb-3">
                     <input
                         type="email"
@@ -32,46 +31,34 @@
 </div>
 
 <?php
-$db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-$db->dbConnect(); 
-
 if($_SERVER["REQUEST_METHOD"]=="POST"){
-    // $email = $_POST["email"];
-    // $password = $_POST["password"];
-    $email = "rbalthasar0@xinhuanet.com";
-    $password = "icojbDbFH1T";
-    $userData = $db->select('user_table',array('*'), "email='".$email."'");
-    $userData = $userData->fetch_all(MYSQLI_ASSOC);
-    
-    if($userData['email']== $email && $userData['password']== $password){
-        echo "correct";
-    } else {
-        echo "incorrect";
+    $email = $_POST["email"];
+    $pass = $_POST["pass"];
+    $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+    if($dbCon = $db->dbConnect()){
+        $userInfo = $db->select('user_table',array('*'),"email='$email'"); //Get the user login info in db
+        if($userInfo){
+            $userInfo = $userInfo->fetch_assoc(); //transform sql query result in associative array
+            if($userInfo['password']==$pass){ //Check form pass with password from db
+                $_SESSION['logUser'] = $userInfo;
+                // echo "Password not hashed yet";
+                header("Location: " . $baseName . $user_auth . "chpass.php");
+                exit();
+            }else{
+                $hashPass = password_verify($pass, $userInfo['password']); //verify password. If returns true means that password is correct
+                if($hashPass){ //On correct password
+                    $_SESSION['logUser'] = $userInfo;
+                    // echo "Pass already hashed";
+                    header("Location: " . $baseName . $user_pages . "feed.php");
+                    exit();
+                }
+            }
+        }
+        echo "Wrong email/password"; //Will run on password wrong or email that is not on db
+    }else{
+        echo "Not connected to database";
     }
-    
-    // print_r($userData);
-    // echo "<p style='color: white;'>$userData.id</p>";
-   
-    $userData = $userData->fetch_all(MYSQLI_ASSOC);
-    print_r($userData);
-    $passhash = $userData['password'];
-    print_r($passhash);
-    $password = password_verify($password, $passhash);
-    // $usertb = "SELECT * FROM user_table";
-    // $email = "SELECT * FROM user_table where email = value form input";
-    // $pass = "SELECT * FROM user_table where pass = value form input";
-        
-    // $role = "SELECT * FROM user_table where role";
-
-    // if($_POST['pass'] == $pass){
-    //     if($role == "Admin"){
-    //         header('Location:./login.php');
-            
-    //     } elseif($role == "User") {
-    //         header('Location:./admin_pages/analytics_board.php');
-    //     }
-    // }
 }
-
-    include "../common/footer.php"
 ?>
+
+<?php include "../common/footer.php"; ?>
