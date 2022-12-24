@@ -1,4 +1,9 @@
-<?php include '../common/header.php' ?>
+<?php include '../common/header.php';
+  if(!isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
+    header("Location: " . $baseName);
+    exit();
+  }
+?>
 <main>
 
     <div class="row justify-content-center align-items-center g-2 pb-3">
