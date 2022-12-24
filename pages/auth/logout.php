@@ -1,6 +1,7 @@
 <?php
-session_unset();
+include "../../config/config.php";
 session_destroy();
-header("Location: ./register.php");
+session_unset();
+header("Location: ./login.php");
 exit();
 ?>

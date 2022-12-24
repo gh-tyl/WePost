@@ -1,30 +1,31 @@
 <?php
     include "../common/header.php";
 ?>
-<style>
-    body{
-        color: white;
-    }
-</style>
 <div class="container-fluid">
     <div class="row justify-content-center align-items-center g-2">
         <div class="col-4">
+            <div class="text-center mb-2">
+                <h2 class="text-light">
+                    Login Page
+                </h2>
+            </div>
             <br>
             <form method="post" action="<?php $_SERVER['PHP_SELF'];?>">
-                <div class="form-floating mb-3">
                     <div class="form-floating mb-3">
-                    <input
-                        type="email"
-                        class="form-control" name="email" placeholder="email">
-                    <label for="formId1">Email</label>
+                        <input
+                            type="email"
+                            class="form-control" name="email" placeholder="email" required>
+                        <label for="email">Email</label>
                     </div>
                     <div class="form-floating mb-3">
-                    <input
-                        type="password"
-                        class="form-control" name="pass" placeholder="pass">
-                    <label for="formId1">Password</label>
+                        <input
+                            type="password"
+                            class="form-control" name="pass" placeholder="pass" required>
+                        <label for="pass">Password</label>
                     </div>
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-outline-light">Login</button>
+                    </div>
             </form>
         </div>
     </div>
