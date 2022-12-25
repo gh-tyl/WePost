@@ -120,6 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 				</div>
 			</section>
 		</div>
+
+
 	</div>
+
 </main>
 <?php include("../common/footer.php") ?>
