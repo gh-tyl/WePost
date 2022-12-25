@@ -1,10 +1,10 @@
 <?php
-    include("../common/header.php");
-    include("./post_articles.php");
-    if(!isset($_SESSION['logUser'])){
-        header("Location: " . $baseName);
-        exit();
-    }
+include("../common/header.php");
+include("./post_articles.php");
+if (!isset($_SESSION['logUser'])) {
+    header("Location: ../auth/login.php");
+    exit();
+}
 ?>
 
 <?php
@@ -49,13 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <main class="container-fluid">
     <div class="row justify-content-center align-items-center g-2">
         <div class="col-8">
-            <div class="alert alert-success alert-dismissible fade show col-10" role="alert" 
-                style="display:<?php if(isset($created)){
-                        echo "block";
-                        unset($created);
-                    }else{
-                        echo "none";
-                    } ?>;">
+            <div class="alert alert-success alert-dismissible fade show col-10" role="alert" style="display:<?php if (isset($created)) {
+                    echo "block";
+                    unset($created);
+                } else {
+                    echo "none";
+                } ?>;">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 <strong>Post Edited!</strong> The content of post has been edited with success!
             </div>
@@ -98,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <?php include("../common/footer.php") ?>
 
 <script>
-  var alertList = document.querySelectorAll('.alert');
-  alertList.forEach(function (alert) {
-    new bootstrap.Alert(alert)
-  })
+    var alertList = document.querySelectorAll('.alert');
+    alertList.forEach(function (alert) {
+        new bootstrap.Alert(alert)
+    })
 </script>
