@@ -1,5 +1,9 @@
 <?php
 include("../common/header.php");
+	if(!isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
+		header("Location: " . $baseName);
+		exit();
+  	}
 ?>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST") {

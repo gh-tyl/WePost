@@ -1,7 +1,12 @@
-<?php include '../common/header.php' ?>
+<?php include '../common/header.php';
+if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page.
+    header("Location: ../auth/login.php");
+    exit();
+}
+?>
 <main>
 
-    <div class="row justify-content-center align-items-center g-2">
+    <div class="row justify-content-center align-items-center g-2 pb-3">
         <div class="col-5">
             <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: 
             <?php
@@ -29,7 +34,7 @@
                     new bootstrap.Alert(alert)
                 })
             </script>
-            <h3>WEPOST User Registration</h3><br />
+            <h3 class="text-light text-center">WEPOST User Registration</h3><br />
             <form method="POST" enctype="multipart/form-data" action="<?php echo $baseName . 'pages/auth/reg.php'; ?>">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" name="fname" placeholder="xc" required>
@@ -78,7 +83,9 @@
                         <option value="Admin">Admin</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-outline-light">Register</button>
+                </div>
             </form>
         </div>
     </div>
