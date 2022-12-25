@@ -62,6 +62,14 @@ include("../../services/db.php");
 						<a class="nav-link" href="<?php echo $baseName . "pages/articles/new_post.php" ?>">New Post</a>
 					</li>
 					<li class="nav-item" 
+					style="display:<?php if(isset($_SESSION['logUser'])){
+                        echo "block";
+                    }else{
+                        echo "none";
+                    } ?>;">
+						<a class="nav-link" href="<?php echo $baseName . "pages/auth/profile.php" ?>">Profile</a>
+					</li>
+					<li class="nav-item" 
 					style="display:<?php if(isset($_SESSION['logUser']) && $_SESSION['logUser']['role']=="Admin"){
                         echo "block";
                     }else{
