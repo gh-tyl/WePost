@@ -4,7 +4,7 @@ include("./post_articles.php");
 ?>
 
 <?php
-if(isset($_GET['e']) && $_GET['e']==1){
+if (isset($_GET['e']) && $_GET['e'] == 1) {
     $pID = intval($_GET['id']);
     header("Location:" . $baseName . "pages/articles/edit_post.php?id=$pID");
     exit();
