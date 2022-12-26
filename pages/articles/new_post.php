@@ -1,6 +1,10 @@
 <?php
 include("../common/header.php");
 include("./post_articles.php");
+if (!isset($_SESSION['logUser'])) {
+    header("Location: ../auth/login.php");
+    exit();
+}
 ?>
 
 <?php
@@ -25,18 +29,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $dbConnected = $dbSrv->dbConnect();
         date_default_timezone_set('America/Vancouver');
         $date = date('Y-m-d H:i:s');
-        // NOW IT'S FIXED TO USER ID 1000. AFTER LOGIN STORE USER INFO IN SESSION TO MAKE DYNAMIC...
-        $insertCmd = "INSERT INTO article_table (user_id, content_path, genre_id_01, likes, stores, datetime) VALUES (1000,'post_$lastPostID.txt',$title,0,0,'$date')";
+        $logID = $_SESSION['logUser']['id'];
+        $insertCmd = "INSERT INTO article_table (user_id, content_path, genre_id_01, likes, stores, datetime) VALUES ($logID,'post_$lastPostID.txt',$title,0,0,'$date')";
         if ($dbConnected->query($insertCmd) === TRUE) {
-            echo "New record created successfully!";
+            $created = 1;
+            // echo "New record created successfully!";
         } else {
             print_r($dbConnected->error);
             echo "<br>";
-            echo "Record was not added.";
+            echo "<h3 class='text-danger'Record was not added.</h3>";
         }
         $dbConnected->close();
     } else {
-        echo "Not Connected to DataBase";
+        echo "<h3 class='text-danger'>Not Connected to DataBase</h3>";
     }
 }
 ?>
@@ -44,6 +49,19 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 <main class="container-fluid">
     <div class="row justify-content-center align-items-center g-2">
         <div class="col-8">
+            <div class="alert alert-success alert-dismissible fade show col-10" role="alert" style="display:<?php if (isset($created)) {
+                    echo "block";
+                    unset($created);
+                } else {
+                    echo "none";
+                } ?>;">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <strong>Post Edited!</strong> The content of post has been edited with success!
+            </div>
+
+            <div class="text-center text-light mb-4">
+                <h2>Create new post</h2>
+            </div>
             <div class='p-1 mb-4 bg-light rounded-3'>
                 <div class='container-fluid py-2'>
                     <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
@@ -77,3 +95,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
 <?php include("../common/footer.php") ?>
+
+<script>
+    var alertList = document.querySelectorAll('.alert');
+    alertList.forEach(function (alert) {
+        new bootstrap.Alert(alert)
+    })
+</script>
