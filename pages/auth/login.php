@@ -51,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
+        $dbcon->close();
         echo "Wrong email/password"; //Will run on password wrong or email that is not on db
     } else {
         echo "Not connected to database";

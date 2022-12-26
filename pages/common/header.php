@@ -7,7 +7,7 @@ include("../../services/db.php");
 <html lang="en">
 
 <head>
-	<title>Title</title>
+	<title>WePost</title>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -56,6 +56,13 @@ include("../../services/db.php");
 	                    echo "none";
                     } ?>;">
 						<a class="nav-link" href="<?php echo "../articles/new_post.php" ?>">New Post</a>
+					</li>
+					<li class="nav-item" style="display:<?php if (isset($_SESSION['logUser'])) {
+	                    echo "block";
+                    } else {
+	                    echo "none";
+                    } ?>;">
+						<a class="nav-link" href="<?php echo $baseName . "pages/auth/profile.php" ?>">Profile</a>
 					</li>
 					<li class="nav-item" style="display:<?php if (isset($_SESSION['logUser']) && $_SESSION['logUser']['role'] == "Admin") {
 	                    echo "block";
