@@ -1,9 +1,9 @@
 <?php
 include("../common/header.php");
-if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page.
-	header("Location: ../auth/login.php");
-	exit();
-}
+	if($_SESSION['logUser']['role']!=="Admin" || !isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
+		header("Location: ../auth/login.php");
+		exit();
+  	}
 ?>
 <?php
 // get the data from the database

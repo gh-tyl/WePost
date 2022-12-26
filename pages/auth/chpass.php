@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         print_r(mysqli_error($dbcon)); //printing error if there's one
         echo "Password not updated";
       }
+      $dbcon->close();
     }
   }
 }
