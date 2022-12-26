@@ -59,6 +59,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
     }else{
         echo "Not connected to database";
     }
+    $dbcon->close();
 }
 ?>
 

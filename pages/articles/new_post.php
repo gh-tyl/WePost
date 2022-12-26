@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         echo "none";
                     } ?>;">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                <strong>Post Edited!</strong> The content of post has been edited with success!
+                <strong>Post Created!</strong> Your post was created with success!
             </div>
 
             <div class="text-center text-light mb-4">

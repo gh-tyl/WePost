@@ -1,6 +1,6 @@
 <?php
 include("../common/header.php");
-	if($_SESSION['logUser']['role']!=="Admin" && !isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
+	if($_SESSION['logUser']['role']!=="Admin" || !isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
 		header("Location: " . $baseName);
 		exit();
   	}

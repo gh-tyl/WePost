@@ -21,18 +21,23 @@ if ($dbcon = $dbSrv->dbConnect()) {
   $uStats = $dbcon->query("SELECT a.user_id,COUNT(a.id) AS postQty, SUM(a.likes) as rc_likes,SUM(a.stores) AS rc_saves FROM article_table a WHERE a.user_id=$uID GROUP BY a.user_id;");
   $followers = $dbcon->query("SELECT f.user_id, COUNT(f.follow_user_id) AS followersQty FROM follow_table f WHERE f.user_id=$uID GROUP BY f.user_id;");
   $posts = $dbcon->query("SELECT a.id AS postID, a.user_id, a.content_path, g.genre, a.datetime FROM article_table a INNER JOIN genre_table g ON g.id=a.genre_id_01 WHERE a.user_id=$uID;");
-  if ($result && $uStats && $followers && $posts) {
+  $lastLog = $dbcon->query("SELECT t.user_id, MIN(t.datetime) AS time FROM login_table t WHERE t.user_id=$uID;");
+  if ($result && $uStats && $followers && $posts && $lastLog) {
     $userInfo = $result->fetch_assoc();
     $uStats = $uStats->fetch_assoc();
     $followers = $followers->fetch_assoc();
     $posts = $posts->fetch_all(MYSQLI_ASSOC);
-    // print_r($posts);
+    $lastLog = $lastLog->fetch_assoc();
+    $lDate = new DateTimeImmutable($lastLog['time']);
+    $lDate = $lDate->format('jS \o\f F Y');
+    // print_r($lastLog);
   }else{
     echo "Errors in query </br>";
     print_r(mysqli_error($dbcon));
     exit();
   }
 }
+$dbcon->close();
 ?>
 
 <section class="h-100 gradient-custom-2">
@@ -43,14 +48,14 @@ if ($dbcon = $dbSrv->dbConnect()) {
           <div class="rounded-top text-white d-flex flex-row align-items-center" style="background-color: #000; height:200px;">
             <div class="ms-4 mt-1 d-flex flex-column align-items-center" style="width: 150px;">
               <img src="<?php echo $baseName."data/images/profiles/".$userInfo['image_path'] ?>"
-                alt="Profile pic" class="img-fluid img-thumbnail mt-1 mb-2"
+                alt="Profile pic" class="img-fluid img-thumbnail text-danger text-center mb-2"
                 style="width: 100px; z-index: 1; height: 100px; border-radius:50%;">
-              <button type="button" class="btn btn-outline-light" data-mdb-ripple-color="dark"
+              <a href="<?php echo "./edit_profile.php" ?>" class="btn btn-outline-light" data-mdb-ripple-color="dark"
                 style="z-index: 1;">
                 Edit profile
-              </button>
+              </a>
             </div>
-            <div class="ms-3" style="margin-top: 100px;">
+            <div class="ms-3" style="margin-top: 0px;">
               <h5>
                 <?php echo $userInfo['first_name']." ".$userInfo['last_name'] ?>
               </h5>
@@ -58,7 +63,7 @@ if ($dbcon = $dbSrv->dbConnect()) {
                 <?php echo $userInfo['country'] ?>
               </p>
               <p>
-                <?php echo $userInfo['age'] . " years"; ?>
+                <?php if($userInfo['age']) echo $userInfo['age'] . " years"; ?>
               </p>
             </div>
           </div>
@@ -86,11 +91,11 @@ if ($dbcon = $dbSrv->dbConnect()) {
             <div class="mb-5">
               <p class="lead fw-normal mb-1">About</p>
               <div class="p-4" style="background-color: #f8f9fa;">
+                <p class="font-italic mb-1">
+                  <?php if($lastLog['time']) echo "User since ".$lDate; ?>
+                </p>
                 <p class="font-italic mb-1">From 
                   <?php echo $userInfo['country'] ?>
-                </p>
-                <p>
-                  <!-- MAYBE PUT USER SINCE -->
                 </p>
               </div>
             </div>
@@ -103,7 +108,7 @@ if ($dbcon = $dbSrv->dbConnect()) {
                   foreach($posts as $p){
                     echo "
                       <div class='p-2' >
-                        <a href='#' class='link-dark'>Post ID: ".$p['postID']." - ".$p['genre']."</a>
+                        <a href='../articles/feed.php#post_".$p['postID']."' class='link-dark'>Post ID: ".$p['postID']." - ".$p['genre']."</a>
                       </div>
                     ";
                   }
