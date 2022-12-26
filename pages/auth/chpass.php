@@ -1,12 +1,12 @@
-<?php include "../common/header.php"; 
-  if(!isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
-    header("Location: " . $baseName);
-    exit();
-  }
+<?php include "../common/header.php";
+if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page.
+  header("Location: ../auth/login.php");
+  exit();
+}
 ?>
 
 <style>
-  body{
+  body {
     color: gray;
   }
 </style>
@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
   $pass2 = $_POST['pass2'];
   if ($pass1 !== $pass2) { //Check if both passwords are not matching
     echo "Passwords doesn't match. Try again";
-  }else{
-    $dbSrv = new dbServices($mysql_host,$mysql_username,$mysql_password,$mysql_database);
+  } else {
+    $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
     if ($dbcon = $dbSrv->dbConnect()) {
       $pass2 = password_hash($pass2, PASSWORD_DEFAULT); //Hash password
       $uid = $_SESSION['logUser']['id'];
@@ -25,15 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       print_r($result);
       if ($result) { //Command to update password in db
         echo "Password updated";
-        header("Location: " . $baseName."pages/articles/feed.php");
+        header("Location: " . $baseName . "pages/articles/feed.php");
         exit;
       } else {
         print_r(mysqli_error($dbcon)); //printing error if there's one
         echo "Password not updated";
       }
+      $dbcon->close();
     }
   }
-  $dbcon->close();
 }
 ?>
 
