@@ -2,15 +2,15 @@
 
 ## Installation
 ```bash
-git clone https://github.com/gh-tyl/WePost.git
-cd WePost
+git clone https://github.com/gh-tyl/wepost-api.git
+cd wepost-api
 cp ./config/config.example.php ./config/config.php
 git checkout develop
 git checkout -b feature/your_feature_branch
 ```
 
 ## Usage
-Run your server and access to it.
+Run your server and access it.
 
 ## Rules
 ### CSS
