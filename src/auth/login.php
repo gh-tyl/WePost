@@ -1,13 +1,17 @@
 <?php
-include "../common/header.php";
+include("../../config/config.php");
+include("../../services/db.php");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
 ?>
-
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
-    $pass = $_POST["pass"];
+    $pass = $_POST["password"];
     $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    if ($dbCon = $db->dbConnect()) {
+    if ($db->connect()) {
         $userInfo = $db->select('user_table', array('*'), "email='$email'"); //Get the user login info in db
         if ($userInfo) {
             $userInfo = $userInfo->fetch_assoc(); //transform sql query result in associative array
@@ -26,7 +30,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $hashPass = password_verify($pass, $userInfo['password']); //verify password. If returns true means that password is correct
                 if ($hashPass) { //On correct password
                     $_SESSION['logUser'] = $userInfo;
-                    // echo "Pass already hashed";
                     echo '
                         {
                             "statusCode": 200,
@@ -39,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
-        $dbcon->close();
+        $db->close();
         echo '
             {
                 "statusCode": 400,
