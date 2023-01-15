@@ -13,7 +13,7 @@ class dbServices
 		$this->password = $password;
 		$this->dbName = $dbName;
 	}
-	function dbConnect()
+	function connect()
 	{
 		$dbcon = new mysqli($this->hostName, $this->userName, $this->password, $this->dbName);
 		if ($dbcon->connect_error) {
@@ -22,7 +22,7 @@ class dbServices
 		$this->dbcon = $dbcon;
 		return $dbcon;
 	}
-	function closeDb()
+	function close()
 	{
 		$this->dbcon->close();
 	}
