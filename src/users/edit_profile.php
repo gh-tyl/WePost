@@ -33,54 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     else
         $country = "";
 
-    // TODO: It's better to do this on the frontend
-    // // Password Check Logic
-    // if (strlen($pass) < 8) {
-    //     echo "
-    //         {
-    //             \"statusCode\": 500,
-    //             \"status\": \"error\",
-    //             \"message\": \"Password is too short\"
-    //         }";
-    // }
-
-    // TODO: It's better to do this on the frontend
-    // // Password Char and Number Combination Check Logic
-    // $charArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    // $numArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
-
-    // $passleng = strlen($pass);
-    // $charchk = 0;
-    // $numchk = 0;
-
-    // for ($cnt = 0; $passleng > $cnt; $cnt++) {
-    //     // echo $cnt . "]";
-    //     // Character check part(convert to lowercase)
-    //     foreach ($charArray as $val) {
-    //         if (strtolower($pass[$cnt]) == $val) {
-    //             // echo "Matched Char[" . $val . "]<br/>";
-    //             $charchk++;
-    //         }
-    //     }
-    //     // Number check part
-    //     foreach ($numArray as $val) {
-    //         if ($pass[$cnt] == $val) {
-    //             // echo "Matched Num[" . $val . "]<br/>";
-    //             $numchk++;
-    //         }
-    //     }
-    // }
-
-    // // echo "<br/>PassChk:" . $charchk . "," . $numchk;
-    // if ($charchk == 0 || $numchk == 0) {
-    //     echo "
-    //         {
-    //             \"statusCode\": 500,
-    //             \"status\": \"error\",
-    //             \"message\": \"Password must contain at least one character and one number\"
-    //         }";
-    // }
-
     // Uploaded Image Check Logic
     if ($image['size'] == 0) {
         $imgurl = null;
@@ -127,45 +79,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         exit();
     }
 
-    // Password Hash Logic
-    $pass = password_hash($pass, PASSWORD_DEFAULT);
-
-    //DB Connection and Insert Data
     $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    $dbcon = $db->connect();
-
-    //insert Data into user_table
-    if ($dbcon) {
-        $tbName = 'user_table';
-        $valuesArray = array(
-            "'$fname'",
-            "'$lname'",
-            "'$email'",
-            "'$pass'",
-            "'$gender'",
-            "'$age'",
-            "'$country'",
-            "'$imgurl'",
-            "'$role'"
-        );
-        $fieldArray = array('first_name', 'last_name', "email", 'password', 'gender', 'age', 'country', 'image_path', 'role');
-        $result = $db->insert($tbName, $valuesArray, $fieldArray);
-        $db->close();
-        echo "
+    if ($dbConnected = $db->connect()) {
+        $updateCmd = "UPDATE user_table u SET first_name='" . $fname . "',last_name='" . $lname . "',email='" . $email . "',age=" . $age . ",country='" . $country . "',image_path='" . $uID . "_profile.jpg" . "' WHERE u.id=" . $uID . ";";
+        $uptRes = $dbConnected->query($updateCmd);
+        $dbConnected->close();
+        if ($uptRes) {
+            echo "
             {
                 \"statusCode\": 200,
                 \"status\": \"success\",
-                \"message\": \"User Registered Successfully\"
+                \"message\": \"Profile updated successfully\"
             }";
-        exit();
-    } else {
-        echo "
+            exit();
+        } else {
+            echo "
             {
                 \"statusCode\": 500,
                 \"status\": \"error\",
-                \"message\": \"Database Connection Error\"
+                \"message\": \"Internal Server Error\"
             }";
-        exit();
+            exit();
+        }
     }
 }
 ?>
