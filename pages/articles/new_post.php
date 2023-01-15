@@ -9,15 +9,15 @@ if (!isset($_SESSION['logUser'])) {
 
 <?php
 $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-if ($dbSrv->dbConnect()) {
-    $dbConnected = $dbSrv->dbConnect();
+if ($dbSrv->connect()) {
+    $connected = $dbSrv->connect();
     $genreSelect = $dbSrv->select('genre_table', array('*'));
     $lastPostID = $dbSrv->select('article_table', ['id']); //Have to change the user number to variable
     $lastPostID = max($lastPostID->fetch_all(MYSQLI_ASSOC))['id'] + 1; //Find the last postID of user and sum +1 to generate fileName
     if ($genreSelect->num_rows > 0) {
         $genres = $genreSelect->fetch_all(MYSQLI_ASSOC);
     }
-    $dbConnected->close();
+    $connected->close();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -25,21 +25,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $contentText = $_POST['contentText'];
     writeInFile("../../data/contents/post_$lastPostID.txt", $contentText);
     $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    if ($dbSrv->dbConnect()) {
-        $dbConnected = $dbSrv->dbConnect();
+    if ($dbSrv->connect()) {
+        $connected = $dbSrv->connect();
         date_default_timezone_set('America/Vancouver');
         $date = date('Y-m-d H:i:s');
         $logID = $_SESSION['logUser']['id'];
         $insertCmd = "INSERT INTO article_table (user_id, content_path, genre_id_01, likes, stores, datetime) VALUES ($logID,'post_$lastPostID.txt',$title,0,0,'$date')";
-        if ($dbConnected->query($insertCmd) === TRUE) {
+        if ($connected->query($insertCmd) === TRUE) {
             $created = 1;
             // echo "New record created successfully!";
         } else {
-            print_r($dbConnected->error);
+            print_r($connected->error);
             echo "<br>";
             echo "<h3 class='text-danger'Record was not added.</h3>";
         }
-        $dbConnected->close();
+        $connected->close();
     } else {
         echo "<h3 class='text-danger'>Not Connected to DataBase</h3>";
     }
@@ -50,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <div class="row justify-content-center align-items-center g-2">
         <div class="col-8">
             <div class="alert alert-success alert-dismissible fade show col-10" role="alert" style="display:<?php if (isset($created)) {
-                    echo "block";
-                    unset($created);
-                } else {
-                    echo "none";
-                } ?>;">
+                echo "block";
+                unset($created);
+            } else {
+                echo "none";
+            } ?>;">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 <strong>Post Created!</strong> Your post was created with success!
             </div>

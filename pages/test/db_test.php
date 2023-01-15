@@ -1,7 +1,7 @@
 <?php include("../../services/db.php") ?>
 <?php
 $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-$dbcon = $db->dbConnect();
+$dbcon = $db->connect();
 // insert
 if ($dbcon) {
 	$tbName = 'user_table';
@@ -27,6 +27,6 @@ if ($dbcon) {
 			echo $row['first_name'] . ' ' . $row['last_name'] . '<br>';
 		}
 	}
-	$db->closeDb();
+	$db->close();
 }
 ?>

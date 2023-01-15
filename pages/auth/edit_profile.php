@@ -14,7 +14,7 @@ if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page
 
 <?php
 $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-if ($dbcon = $dbSrv->dbConnect()) {
+if ($dbcon = $dbSrv->connect()) {
   $uID = intval($_SESSION['logUser']['id']);
   $result = $dbcon->query("SELECT u.id,u.first_name,u.last_name,u.email,u.gender,u.country,u.age,u.image_path FROM user_table u WHERE u.id=$uID");
   if ($result) {
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
   }
 
   $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-  if ($dbCon = $db->dbConnect()) {
+  if ($dbCon = $db->connect()) {
     $updateCmd = "UPDATE user_table u SET first_name='" . $fname . "',last_name='" . $lname . "',email='" . $email . "',age=" . $age . ",country='" . $country . "',image_path='" . $uID . "_profile.jpg" . "' WHERE u.id=" . $uID . ";";
     // print_r($updateCmd);
     if ($uptRes = $dbCon->query($updateCmd)) {
