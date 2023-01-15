@@ -14,7 +14,7 @@ if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page
 
 <?php
 $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-if ($dbcon = $dbSrv->dbConnect()) {
+if ($dbcon = $dbSrv->connect()) {
   $uID = intval($_SESSION['logUser']['id']);
   //Still have to change select, do group by probably. Its repeating bc of multiple articles
   $result = $dbcon->query("SELECT u.id,u.first_name,u.last_name,u.email,u.gender,u.country,u.age,u.image_path FROM user_table u WHERE u.id=$uID");

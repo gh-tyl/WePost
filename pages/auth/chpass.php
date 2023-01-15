@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     echo "Passwords doesn't match. Try again";
   } else {
     $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    if ($dbcon = $dbSrv->dbConnect()) {
+    if ($dbcon = $dbSrv->connect()) {
       $pass2 = password_hash($pass2, PASSWORD_DEFAULT); //Hash password
       $uid = $_SESSION['logUser']['id'];
       $result = $dbcon->query("UPDATE user_table SET password='$pass2' WHERE id=$uid;");

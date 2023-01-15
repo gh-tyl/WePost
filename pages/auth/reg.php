@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     //DB Connection and Insert Data
     $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    $dbcon = $db->dbConnect();
+    $dbcon = $db->connect();
 
     //insert Data into user_table
     if ($dbcon) {
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $result = $db->insert($tbName, $valuesArray, $fieldArray);
         // print_r($valuesArray);
     }
-    $db->closeDb();
+    $db->close();
 
     header("Location: ./register.php?msg=ok");
     exit();

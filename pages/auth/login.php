@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST["email"];
     $pass = $_POST["pass"];
     $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    if ($dbCon = $db->dbConnect()) {
+    if ($dbCon = $db->connect()) {
         $userInfo = $db->select('user_table', array('*'), "email='$email'"); //Get the user login info in db
         if ($userInfo) {
             $userInfo = $userInfo->fetch_assoc(); //transform sql query result in associative array
