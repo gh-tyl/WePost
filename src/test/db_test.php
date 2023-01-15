@@ -1,9 +1,8 @@
 <?php include("../../services/db.php") ?>
 <?php
 $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-$dbcon = $db->dbConnect();
 // insert
-if ($dbcon) {
+if ($db->connect()) {
 	$tbName = 'user_table';
 	$valuesArray = array(
 		"'John'",
@@ -27,6 +26,6 @@ if ($dbcon) {
 			echo $row['first_name'] . ' ' . $row['last_name'] . '<br>';
 		}
 	}
-	$db->closeDb();
+	$db->close();
 }
 ?>

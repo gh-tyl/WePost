@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     //DB Connection and Insert Data
     $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    $dbcon = $db->dbConnect();
+    $dbcon = $db->connect();
 
     //insert Data into user_table
     if ($dbcon) {
