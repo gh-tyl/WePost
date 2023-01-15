@@ -7,19 +7,20 @@ header('Access-Control-Allow-Header: *');
 header('Content-Type: application/json');
 ?>
 <?php
-if (isset($_GET['id'])) {
-    $pID = intval($_GET['id']);
-    $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    $connected = $db->connect();
-    if ($connected) {
-        $result = $connected->query("SELECT a.id,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id=$pID");
-        if ($result) {
-            $postInfo = $result->fetch_assoc();
-            $contentText = readThisFile("../../data/contents/" . $postInfo['content_path']);
-            $date = new DateTimeImmutable($postInfo['datetime']);
-            $date = $date->format('l jS \o\f F Y h:i A');
-            $fullname = $postInfo['first_name'] . " " . $postInfo['last_name'];
-            echo "
+if ($_SERVER['REQUEST_METHOD'] == "GET") {
+    if (isset($_GET['id'])) {
+        $pID = intval($_GET['id']);
+        $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+        $connected = $db->connect();
+        if ($connected) {
+            $result = $connected->query("SELECT a.id,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id=$pID");
+            if ($result) {
+                $postInfo = $result->fetch_assoc();
+                $contentText = readThisFile("../../data/contents/" . $postInfo['content_path']);
+                $date = new DateTimeImmutable($postInfo['datetime']);
+                $date = $date->format('l jS \o\f F Y h:i A');
+                $fullname = $postInfo['first_name'] . " " . $postInfo['last_name'];
+                echo "
                 {
                     \"statusCode\": 200,
                     \"status\": \"success\",
@@ -41,16 +42,17 @@ if (isset($_GET['id'])) {
                         \"contentText\": \"" . $contentText . "\"
                     }
                 }";
-        }
-        $db->close();
-    } else {
-        echo "
+            }
+            $db->close();
+        } else {
+            echo "
             {
                 \"statusCode\": 500,
                 \"status\": \"error\",
                 \"message\": \"Internal Server Error\"
             }
-        ";
+            ";
+        }
     }
 }
 ?>
