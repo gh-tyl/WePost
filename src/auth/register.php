@@ -1,93 +1,168 @@
-<?php include '../common/header.php';
-if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page.
-    header("Location: ../auth/login.php");
-    exit();
+<?php
+include("../../config/config.php");
+include("../../services/db.php");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
+?>
+<?php
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    $fname = $_POST['fname'];
+    $lname = $_POST['lname'];
+    $email = $_POST['email'];
+    $pass = $_POST['pass'];
+    $image = $_FILES['image'];
+    $role = $_POST['role'];
+
+    // Optional Data Null check Logic
+    if (isset($_POST['gender']))
+        $gender = $_POST['gender'];
+    else
+        $gender = "";
+
+    if (isset($_POST['age']))
+        $age = $_POST['age'];
+    else
+        $age = 0;
+
+    if (isset($_POST['country']))
+        $country = $_POST['country'];
+    else
+        $country = "";
+
+    // Password Check Logic
+    if (strlen($pass) < 8) {
+        // header("Location: " . $baseName . 'pages/user_auth/register.php?msg=passlong');
+        header("Location: ./register.php?msg=passlong");
+        echo "
+            {
+                \"statusCode\": 500,
+                \"status\": \"error\",
+                \"message\": \"Password is too short\"
+            }";
+    }
+
+    // Password Char and Number Combination Check Logic
+    $charArray = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    $numArray = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+
+    $passleng = strlen($pass);
+    $charchk = 0;
+    $numchk = 0;
+
+    for ($cnt = 0; $passleng > $cnt; $cnt++) {
+        // echo $cnt . "]";
+        // Character check part(convert to lowercase)
+        foreach ($charArray as $val) {
+            if (strtolower($pass[$cnt]) == $val) {
+                // echo "Matched Char[" . $val . "]<br/>";
+                $charchk++;
+            }
+        }
+        // Number check part
+        foreach ($numArray as $val) {
+            if ($pass[$cnt] == $val) {
+                // echo "Matched Num[" . $val . "]<br/>";
+                $numchk++;
+            }
+        }
+    }
+
+    // echo "<br/>PassChk:" . $charchk . "," . $numchk;
+    if ($charchk == 0 || $numchk == 0) {
+        echo "
+            {
+                \"statusCode\": 500,
+                \"status\": \"error\",
+                \"message\": \"Password must contain at least one character and one number\"
+            }";
+    }
+
+    // Password Hash Logic
+    $pass = password_hash($pass, PASSWORD_DEFAULT);
+
+    // Uploaded Image Check Logic
+    if ($image['size'] == 0) {
+        $imgurl = null;
+    } else {
+        $targetDir = "../../data/images/profiles/";
+        if ($image['size'] < 1000000) {
+            // jpg or png
+            if ($image['type'] == "image/jpeg" || $image['type'] == "image/jpg" || $image['type'] == "image/png") {
+                if (getimagesize($image['tmp_name']) !== false) {
+                    $targetDir = $targetDir . $fname . $lname . rand(1, 10) . ".jpg";
+                    if (move_uploaded_file($image['tmp_name'], $targetDir)) {
+                        $imgurl = $targetDir;
+                    } else
+                        echo "
+                            {
+                                \"statusCode\": 500,
+                                \"status\": \"error\",
+                                \"message\": \"Image is not uploaded\"
+                            }";
+                } else
+                    echo "
+                        {
+                            \"statusCode\": 500,
+                            \"status\": \"error\",
+                            \"message\": \"Please upload JPG/JPEG image file.\"
+                        }";
+            } else
+                echo "
+            {
+                \"statusCode\": 500,
+                \"status\": \"error\",
+                \"message\": \"Please upload JPG/JPEG image file.\"
+            }";
+        } else
+            echo "
+            {
+                \"statusCode\": 500,
+                \"status\": \"error\",
+                \"message\": \"Image is too big\"
+            }";
+    }
+
+    // // Input Data Check Log
+    // echo $fname . "," . $lname . "," . $email . "," . $pass . "," . $gender . "," .
+    //     $age . "," . $country . "," . $imgurl . "," . $role;
+    // echo "<br/><br/>";
+
+    //DB Connection and Insert Data
+    $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+    $dbcon = $db->connect();
+
+    //insert Data into user_table
+    if ($dbcon) {
+        $tbName = 'user_table';
+        $valuesArray = array(
+            "'$fname'",
+            "'$lname'",
+            "'$email'",
+            "'$pass'",
+            "'$gender'",
+            "$age",
+            "'$country'",
+            "'$imgurl'",
+            "'$role'"
+        );
+        $fieldArray = array('first_name', 'last_name', "email", 'password', 'gender', 'age', 'country', 'image_path', 'role');
+        $result = $db->insert($tbName, $valuesArray, $fieldArray);
+        echo "
+            {
+                \"statusCode\": 200,
+                \"status\": \"success\",
+                \"message\": \"User Registered Successfully\"
+            }";
+    } else {
+        echo "
+            {
+                \"statusCode\": 500,
+                \"status\": \"error\",
+                \"message\": \"Database Connection Error\"
+            }";
+    }
+    $db->close();
 }
 ?>
-<main>
-
-    <div class="row justify-content-center align-items-center g-2 pb-3">
-        <div class="col-5">
-            <div class="alert alert-success alert-dismissible fade show" role="alert" style="display: 
-            <?php
-            if (isset($_GET['msg']))
-                echo "block";
-            else
-                echo "none";
-            ?> ;">
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                <?php if ($_GET['msg'] == "ok") {
-                    echo "<strong>Success</strong> Student Added";
-                } elseif ($_GET['msg'] == "passlong") {
-                    echo "<strong>Warning</strong> Password should be longer than 8 characters!";
-                } elseif ($_GET['msg'] == "passchk") {
-                    echo "<strong>Warning</strong> Password should have at least 1 character or 1 number!";
-                } elseif ($_GET['msg'] == "null") {
-                    echo "<strong>Warning</strong> Please input values!";
-                }
-                ?>
-            </div>
-
-            <script>
-                var alertList = document.querySelectorAll('.alert');
-                alertList.forEach(function (alert) {
-                    new bootstrap.Alert(alert)
-                })
-            </script>
-            <h3 class="text-light text-center">WEPOST User Registration</h3><br />
-            <form method="POST" enctype="multipart/form-data" action="<?php echo $baseName . 'pages/auth/reg.php'; ?>">
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="fname" placeholder="xc" required>
-                    <label for="formId1">First Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="lname" placeholder="xc" required>
-                    <label for="formId1">Last Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="email" class="form-control" name="email" placeholder="xc" required>
-                    <label for="formId1">Email</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="pass" placeholder="xc" required>
-                    <label for="formId1">Password</label>
-                </div>
-                <div class="mb-3">
-                    <select class="form-select form-select-lg" name="gender">
-                        <option selected disabled>Select the gender</option>
-                        <option value="female">Female</option>
-                        <option value="male">Male</option>
-                        <option value="ohter">Other</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <select class="form-select form-select-lg" name="age">
-                        <option selected disabled>Select the age</option>
-                        <?php for ($cnt = 15; $cnt <= 80; $cnt++) {
-                            echo "<option value='$cnt'>$cnt years of age</option>";
-                        } ?>
-                    </select>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="country" placeholder="xc">
-                    <label for="formId1">Country</label>
-                </div>
-                <div class="mb-3">
-                    <label for="" class="form-label">Select the image</label>
-                    <input type="file" class="form-control" name="image" placeholder="Select your image"
-                        aria-describedby="fileHelpId">
-                </div>
-                <div class="mb-3">
-                    <select class="form-select form-select-lg" name="role">
-                        <option value="User" selected>User</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                </div>
-                <div class="text-center">
-                    <button type="submit" class="btn btn-outline-light">Register</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</main>
-<?php include '../common/footer.php' ?>
