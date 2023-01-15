@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS `article_table`;
 CREATE TABLE `WePostDB`.`article_table` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
+  `title` VARCHAR(50) NOT NULL,
   `content_path` VARCHAR(200) NOT NULL,
   `genre_id_01` INT NOT NULL,
   `genre_id_02` INT,
