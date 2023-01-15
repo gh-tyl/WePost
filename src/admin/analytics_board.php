@@ -1,19 +1,20 @@
 <?php
-include("../common/header.php");
-	if($_SESSION['logUser']['role']!=="Admin" || !isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
-		header("Location: ../auth/login.php");
-		exit();
-  	}
+include("../../config/config.php");
+include("../../services/db.php");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
 ?>
 <?php
 // get the data from the database
 $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-if ($db->dbConnect()) {
-	$dbConnected = $db->dbConnect();
+$connected = $db->connect();
+if ($connected) {
 	$usersCount = $db->select('user_table', ['id'], "user_table.role='user'");
 	$articleInfo = $db->select('article_table', ['id', 'user_id', 'likes', 'stores', 'datetime']);
 	$likesSel = $db->select('article_table', ['id', 'user_id', 'likes']);
-	$likesSearch = $dbConnected->query("SELECT a.id,a.likes,a.stores,a.datetime,u.first_name,u.last_name FROM article_table a INNER JOIN user_table u ON u.id = a.user_id");
+	$likesSearch = $connected->query("SELECT a.id,a.likes,a.stores,a.datetime,u.first_name,u.last_name FROM article_table a INNER JOIN user_table u ON u.id = a.user_id");
 	$likesSearch = $likesSearch->fetch_all(MYSQLI_ASSOC);
 	$likesSel = $likesSel->fetch_all(MYSQLI_ASSOC);
 	$ranking_articles = [];
@@ -41,94 +42,23 @@ if ($db->dbConnect()) {
 	// echo ("</pre>");
 	arsort($ranking_users);
 	$ranking_users = array_slice($ranking_users, 0, 5, true);
+	echo "
+		{
+			\"statusCode\": 200,
+			\"status\": \"success\",
+			\"usersCount\": " . $usersCount->num_rows . ",
+			\"articlesCount\": " . $articleInfo->num_rows . ",
+			\"ranking_articles\": " . json_encode($ranking_articles) . ",
+			\"ranking_users\": " . json_encode($ranking_users) . "
+		}
+	";
 } else {
-	echo "Error connecting to database";
+	echo "
+		{
+			\"statusCode\": 500,
+			\"status\": \"error\",
+			\"message\": \"Error connecting to the database\"
+		}
+	";
 }
 ?>
-
-
-<style>
-	body {
-		/* color: white; */
-		color: gray;
-	}
-</style>
-
-<main class="container-fluid">
-	<div class="row justify-content-center align-items-center g-2">
-		<form action="./analytics_board.php" method="post">
-			<select name="Media" onchange="this.form.submit()">
-				<option value="none" selected disable>Select</option>
-				<option value="posts">Posts</option>
-				<option value="users">Users</option>
-			</select>
-		</form>
-		<!-- showw post ranking articles -->
-		<?php if (isset($_POST['Media']) && $_POST['Media'] == 'posts') { ?>
-		<div class="col-12">
-			<h2>Top 5 posts</h2>
-			<?php foreach ($ranking_articles as $post_id => $post) {
-		        $post = $db->select('article_table', ['id', 'user_id', 'likes', 'stores', 'datetime'], "id = $post_id");
-		        $post = $post->fetch_assoc();
-		        $user = $db->select('user_table', ['id', 'first_name', 'last_name'], "id = $post[user_id]");
-		        $user = $user->fetch_assoc();
-		        $user['fullname'] = $user['first_name'] . " " . $user['last_name'];
-		        // <h5 class='card-title text-center'>$post[title]</h5>
-        		echo "
-				<div class='card'>
-					<div class='card-body'>
-						<p class='card-text text-center'>$post[datetime]</p>
-						<p class='card-text text-center'>$user[fullname]</p>
-						<p class='card-text text-center'>$post[likes] likes</p>
-						<p class='card-text text-center'>$post[stores] stores</p>
-					</div>
-				</div>
-				"
-            	?>
-		</div>
-		<?php } ?>
-		<?php } ?>
-		<!-- show ranking_users -->
-		<?php if (isset($_POST['Media']) && $_POST['Media'] == 'users') { ?>
-		<div class="col-12">
-			<h2>Top 5 users</h2>
-			<?php foreach ($ranking_users as $user_id => $user) {
-		        $user = $db->select('user_table', ['id', 'first_name', 'last_name'], "id = $user_id");
-		        $user = $user->fetch_assoc();
-		        $user['fullname'] = $user['first_name'] . " " . $user['last_name'];
-            ?>
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title"><?php echo $user['fullname'] ?></h5>
-					<p class="card-text"><?php echo $ranking_users[$user['id']] ?> likes</p>
-				</div>
-			</div>
-			<?php } ?>
-		</div>
-		<?php } else if (isset($_POST['Media']) && $_POST['Media'] == 'users') { ?>
-		<div class="col-12">
-			<h2>Top 5 users</h2>
-			<?php foreach ($ranking_users as $user) {
-		        echo ($user);
-		        $user = $db->select('user_table', ['id', 'first_name', 'last_name'], "id = $user");
-		        echo ($user);
-		        $user = $user->fetch_assoc();
-		        $user['fullname'] = $user['first_name'] . " " . $user['last_name'];
-            ?>
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title
-						<?php if ($ranking_users[$user['id']] == 0) {
-			        echo "text-danger";
-		        } else {
-			        echo "text-success";
-		        } ?>
-						"><?php echo $user['fullname'] ?></h5>
-					<p class="card-text"><?php echo $ranking_users[$user['id']] ?> posts</p>
-				</div>
-			</div>
-			<?php } ?>
-		</div>
-		<?php } ?>
-</main>
-<?php include("../common/footer.php") ?>

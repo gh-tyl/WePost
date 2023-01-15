@@ -1,60 +1,47 @@
-<?php include "../common/header.php";
-if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page.
-  header("Location: ../auth/login.php");
-  exit();
-}
+<?php
+include("../../config/config.php");
+include("../../services/db.php");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
 ?>
-
-<style>
-  body {
-    color: gray;
-  }
-</style>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-  $pass1 = $_POST['pass1'];
-  $pass2 = $_POST['pass2'];
-  if ($pass1 !== $pass2) { //Check if both passwords are not matching
-    echo "Passwords doesn't match. Try again";
+  $pass_orginal = $_POST['pass_orginal'];
+  $pass_confirm = $_POST['pass_confirm'];
+  if ($pass_orginal !== $pass_confirm) { //Check if both passwords are not matching
+    echo "
+    {
+      \"statusCode\": 400,
+      \"status\": \"error\",
+      \"message\": \"Passwords doesn't match. Try again\"
+    }";
   } else {
     $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    if ($dbcon = $dbSrv->dbConnect()) {
-      $pass2 = password_hash($pass2, PASSWORD_DEFAULT); //Hash password
+    if ($dbcon = $dbSrv->connect()) {
+      $pass_confirm = password_hash($pass_confirm, PASSWORD_DEFAULT); //Hash password
       $uid = $_SESSION['logUser']['id'];
-      $result = $dbcon->query("UPDATE user_table SET password='$pass2' WHERE id=$uid;");
-      print_r($result);
+      $result = $dbcon->query("UPDATE user_table SET password='$pass_confirm' WHERE id=$uid;");
       if ($result) { //Command to update password in db
-        echo "Password updated";
-        header("Location: " . $baseName . "pages/articles/feed.php");
+        echo "
+        {
+          \"statusCode\": 200,
+          \"status\": \"success\",
+          \"message\": \"Password updated\"
+        }";
         exit;
       } else {
-        print_r(mysqli_error($dbcon)); //printing error if there's one
-        echo "Password not updated";
+        // print_r(mysqli_error($dbcon)); //printing error if there's one
+        echo "
+        {
+          \"statusCode\": 500,
+          \"status\": \"error\",
+          \"message\": \"Internal server error\"
+        }";
       }
       $dbcon->close();
     }
   }
 }
 ?>
-
-<div class="row justify-content-center align-items-start g-2">
-  <div class="col-6">
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-      <h2 class="text-light text-center mb-3">Change Password</h2>
-      <div class="form-floating mb-3">
-        <input type="password" class="form-control" name="pass1" placeholder="sd">
-        <label for="pass1">New Password</label>
-      </div>
-      <div class="form-floating mb-3">
-        <input type="password" class="form-control" name="pass2" placeholder="sd">
-        <label for="pass2">Confirm Password</label>
-      </div>
-      <div class="text-center">
-        <button type="submit" class="btn btn-outline-light">Submit</button>
-      </div>
-    </form>
-  </div>
-
-</div>
-
-<?php include "../common/footer.php"; ?>

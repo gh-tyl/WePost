@@ -17,47 +17,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $userInfo = $userInfo->fetch_assoc(); //transform sql query result in associative array
             if ($userInfo['password'] == $pass) { //Check form pass with password from db
                 $_SESSION['logUser'] = $userInfo;
-                echo '
+                echo "
                     {
-                        "statusCode": 200, 
-                        "status": "success",
-                        "message": "Login successful"
-                        "isHashed": false
+                        \"statusCode\": 200,
+                        \"status\": \"success\",
+                        \"message\": \"Login successful\",
+                        \"isHashed\": false
                     }
-                ';
-                exit();
+                ";
             } else {
                 $hashPass = password_verify($pass, $userInfo['password']); //verify password. If returns true means that password is correct
                 if ($hashPass) { //On correct password
                     $_SESSION['logUser'] = $userInfo;
-                    echo '
+                    echo "
                         {
-                            "statusCode": 200,
-                            "status": "success",
-                            "message": "Login successful"
-                            "isHashed": true
+                            \"statusCode\": 200,
+                            \"status\": \"success\",
+                            \"message\": \"Login successful\",
+                            \"isHashed\": true
                         }
-                    ';
-                    exit();
+                    ";
                 }
             }
         }
         $db->close();
-        echo '
+        echo "
             {
-                "statusCode": 400,
-                "status": "error",
-                "message": "Wrong email or password"
+                \"statusCode\": 401,
+                \"status\": \"error\",
+                \"message\": \"Invalid credentials\"
             }
-        '; //Will run on password wrong or email that is not on db
+        ";
     } else {
-        echo '
+        echo "
             {
-                "statusCode": 500,
-                "status": "error",
-                "message": "Internal server error"
+                \"statusCode\": 500,
+                \"status\": \"error\",
+                \"message\": \"Internal server error\"
             }
-        ';
+        ";
     }
 }
 ?>

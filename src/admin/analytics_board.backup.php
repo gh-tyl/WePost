@@ -8,19 +8,19 @@ if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	$selTopic = $_POST['selTopic'];
-	$dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-	if ($dbSrv->dbConnect()) {
-		$dbConnected = $dbSrv->dbConnect();
+	$db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+	if ($db->connect()) {
+		$connected = $db->connect();
 		switch ($selTopic) {
 			case 'posts':
 				# code...
 				break;
 
 			case 'users':
-				$usersCount = $dbSrv->select('user_table', ['id'], "user_table.role='user'");
-				$articleInfo = $dbSrv->select('article_table', ['id', 'user_id', 'likes', 'stores', 'datetime']);
-				$likesSel = $dbSrv->select('article_table', ['id', 'user_id', 'likes']);
-				$likesSearch = $dbConnected->query("SELECT a.id,a.likes,a.stores,a.datetime,u.first_name,u.last_name FROM article_table a INNER JOIN user_table u ON u.id = a.user_id");
+				$usersCount = $db->select('user_table', ['id'], "user_table.role='user'");
+				$articleInfo = $db->select('article_table', ['id', 'user_id', 'likes', 'stores', 'datetime']);
+				$likesSel = $db->select('article_table', ['id', 'user_id', 'likes']);
+				$likesSearch = $connected->query("SELECT a.id,a.likes,a.stores,a.datetime,u.first_name,u.last_name FROM article_table a INNER JOIN user_table u ON u.id = a.user_id");
 				$likesSearch = $likesSearch->fetch_all(MYSQLI_ASSOC);
 				$maxLikes = 0;
 				$likesSel = $likesSel->fetch_all(MYSQLI_ASSOC);
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 				}
 
 
-				echo $dbConnected->error;
+				echo $connected->error;
 				if ($usersCount) {
 					$usersCount = count($usersCount->fetch_all(MYSQLI_ASSOC));
 					$articleInfo = $articleInfo->fetch_all(MYSQLI_ASSOC);
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 				break;
 			case 'comments':
 		}
-		$dbConnected->close();
+		$connected->close();
 
 	} else {
 		echo "Could not connect to database!";
@@ -78,44 +78,44 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			<section class="row d-flex flex-wrap justify-content-around align-items-center g-2">
 				<h3 class="text-center">
 					<?php
-                    if (isset($_POST['selTopic']))
-	                    echo ucfirst($_POST['selTopic'] . " data");
-                    ?>
+					if (isset($_POST['selTopic']))
+						echo ucfirst($_POST['selTopic'] . " data");
+					?>
 				</h3>
 				<div class="col">
 					<p class="fs-1">
 						<?php
-                        if (isset($usersCount)) {
-	                        echo $usersCount . " USERS";
-                        }
-                        ?>
+						if (isset($usersCount)) {
+							echo $usersCount . " USERS";
+						}
+						?>
 					</p>
 				</div>
 				<div class="col">
 					<p class="fs-1">
 						<?php
-                        if (isset($postsCount)) {
-	                        echo $postsCount . " POSTS";
-                        }
-                        ?>
+						if (isset($postsCount)) {
+							echo $postsCount . " POSTS";
+						}
+						?>
 					</p>
 				</div>
 				<div class="col">
 					<p class="fs-1">
 						<?php
-                        if (isset($totalLikes)) {
-	                        echo $totalLikes . " LIKES IN ALL POSTS";
-                        }
-                        ?>
+						if (isset($totalLikes)) {
+							echo $totalLikes . " LIKES IN ALL POSTS";
+						}
+						?>
 					</p>
 				</div>
 				<div class="col">
 					<p class="fs-1">
 						<?php
-                        if (isset($popPost)) {
-	                        echo "POST WITH MOST LIKES IS POST " . $popPost['id'] . " FROM " . $popPost['fullname'] . " WITH " . $popPost['likes'] . " LIKES";
-                        }
-                        ?>
+						if (isset($popPost)) {
+							echo "POST WITH MOST LIKES IS POST " . $popPost['id'] . " FROM " . $popPost['fullname'] . " WITH " . $popPost['likes'] . " LIKES";
+						}
+						?>
 					</p>
 				</div>
 			</section>
