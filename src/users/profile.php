@@ -55,7 +55,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     },
                     \"stats\": 
                     {
-                        \"posts\": $uStats[postQty],
+                        \"postQty\": $uStats[postQty],
+                        \"postQty\": $uStats[postQty],
                         \"followers\": $followers[followersQty],
                         \"likes\": $uStats[rc_likes],
                         \"saves\": $uStats[rc_saves],
