@@ -19,40 +19,47 @@ function readThisFile($fileName)
 }
 
 // INPUTS: article_id
-// OUTPUTS: article data
+// OUTPUTS: statusCode, status, data
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	// $article_id = $_POST['article_id'];
 	$article_id = intval(1);
 	$db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-	$connected = $db->connect();
-	if ($connected) {
-		$joinUsers = $connected->query("SELECT a.id,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id = $article_id");
-		if ($joinUsers) {
-			$posts = $joinUsers->fetch_all(MYSQLI_ASSOC);
+	$dbConnected = $db->connect();
+	if ($dbConnected) {
+		$article = $dbConnected->query("SELECT a.id,a.title,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id = $article_id");
+		$article = $article->fetch_all(MYSQLI_ASSOC);
+		if ($article) {
+			$db->close();
 			echo "
 			{
 				\"statusCode\": 200,
 				\"status\": \"success\",
 				\"data\": {
-					\"posts\": " . json_encode($posts) . ",
+					\"article\": " . json_encode($article) . ",
 				}
 			}";
+			exit();
 		} else {
 			echo "
 			{
-				\"statusCode\": 500,
-				\"status\": \"error\",
-				\"message\": \"Internal Server Error\"
+				\"statusCode\": 204,
+				\"status\": \"No Content\",
+				\"data\": {
+					\"article\": []
+				},
 			}";
+			exit();
 		}
-		$db->close();
 	} else {
 		echo "
 		{
 			\"statusCode\": 500,
-			\"status\": \"error\",
-			\"message\": \"Internal Server Error\"
+			\"status\": \"Internal Server Error\",
+			\"data\": {
+				\"article\": []
+			},
 		}";
+		exit();
 	}
 }
 ?>

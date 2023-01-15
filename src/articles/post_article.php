@@ -13,30 +13,33 @@ function writeInFile($fileName, $newData)
     fwrite($file, $newData);
     fclose($file);
 }
-// INPUTS: title, contentText
-// OUTPUTS: message
+// INPUTS: token, title, contents, (genre_id_01, genre_id_02, genre_id_03)
+// OUTPUTS: statusCode, status, message
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $title = intval($_POST['title']);
-    $contentText = $_POST['contentText'];
+    $title = $_POST['title'];
+    $contents = $_POST['contents'];
     $lastPostID = $db->select('article_table', ['id']); //Have to change the user number to variable
     $lastPostID = max($lastPostID->fetch_all(MYSQLI_ASSOC))['id'] + 1; //Find the last postID of user and sum +1 to generate fileName
-    writeInFile("../../data/contents/post_$lastPostID.txt", $contentText);
+    writeInFile("../../data/contents/post_$lastPostID.txt", $contents);
     $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    $connected = $db->connect();
-    if ($connected) {
+    $dbConnected = $db->connect();
+    if ($dbConnected) {
         date_default_timezone_set('America/Vancouver');
         $date = date('Y-m-d H:i:s');
-        $logID = $_SESSION['logUser']['id'];
-        $insertCmd = "INSERT INTO article_table (user_id, content_path, genre_id_01, likes, stores, datetime) VALUES ($logID,'post_$lastPostID.txt',$title,0,0,'$date')";
-        if ($connected->query($insertCmd) === TRUE) {
+        // $user_id = $_SESSION[$_POST['token']['id']];
+        $user_id = 1;
+        $insertCmd = "INSERT INTO article_table (user_id, title, content_path, genre_id_01, likes, stores, datetime) VALUES ($user_id,'$title','post_$lastPostID.txt',0,0,0,'$date')";
+        $isInserted = $dbConnected->query($insertCmd);
+        $dbConnected->close();
+        if ($isInserted === TRUE) {
             $created = 1;
             echo "
             {
                 \"statusCode\": 200,
                 \"status\": \"success\",
                 \"message\": \"New record created successfully!\"
-            }
-            ";
+            }";
+            exit();
         } else {
             echo "
             {
@@ -44,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 \"status\": \"error\",
                 \"message\": \"Internal Server Error\"
             }";
+            exit();
         }
-        $connected->close();
     } else {
         echo "
         {
@@ -53,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             \"status\": \"error\",
             \"message\": \"Internal Server Error\"
         }";
+        exit();
     }
 }
 ?>

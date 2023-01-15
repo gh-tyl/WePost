@@ -8,15 +8,16 @@ header('Content-Type: application/json');
 ?>
 <?php
 // INPUTS: article_id
-// OUTPUTS: comments data
+// OUTPUTS: statusCode, status, data
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	// $article_id = $_POST['article_id'];
 	$article_id = intval(1);
 	$db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-	$connected = $db->connect();
-	if ($connected) {
-		$comments = $connected->query("SELECT `article_id`, `comment`, `datetime` FROM `comment_table` WHERE `article_id` = $article_id");
+	$dbConnected = $db->connect();
+	if ($dbConnected) {
+		$comments = $dbConnected->query("SELECT `article_id`, `comment`, `datetime` FROM `comment_table` WHERE `article_id` = $article_id");
 		$comments = $comments->fetch_all(MYSQLI_ASSOC);
+		$db->close();
 		if ($comments) {
 			echo "
 			{
@@ -26,22 +27,28 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 					\"comments\": " . json_encode($comments) . ",
 				}
 			}";
+			exit();
 		} else {
 			echo "
 			{
 				\"statusCode\": 204,
-				\"status\": \"success\",
-				\"message\": \"No Content\"
+				\"status\": \"No Content\",
+				\"data\": {
+					\"comments\": []
+				},
 			}";
+			exit();
 		}
-		$db->close();
 	} else {
 		echo "
 		{
 			\"statusCode\": 500,
-			\"status\": \"error\",
-			\"message\": \"Internal Server Error\"
+			\"status\": \"Internal Server Error\",
+			\"data\": {
+				\"comments\": []
+			},
 		}";
+		exit();
 	}
 }
 ?>

@@ -7,7 +7,7 @@ header('Access-Control-Allow-Header: *');
 header('Content-Type: application/json');
 ?>
 <?php
-// INPUTS: user_id, article_id, comment
+// INPUTS: token, article_id, comment
 // OUTPUTS: message
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 }
