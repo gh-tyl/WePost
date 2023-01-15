@@ -1,8 +1,11 @@
 <?php
-include("../common/header.php");
-include("./post_articles.php");
+include("../../config/config.php");
+include("../../services/db.php");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
 ?>
-
 <?php
 if (isset($_GET['e']) && $_GET['e'] == 1) {
     $pID = intval($_GET['id']);

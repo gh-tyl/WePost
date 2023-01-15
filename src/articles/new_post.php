@@ -1,12 +1,11 @@
 <?php
-include("../common/header.php");
-include("./post_articles.php");
-if (!isset($_SESSION['logUser'])) {
-    header("Location: ../auth/login.php");
-    exit();
-}
+include("../../config/config.php");
+include("../../services/db.php");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
 ?>
-
 <?php
 $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
 if ($dbSrv->connect()) {

@@ -1,14 +1,17 @@
 <?php
-include("../common/header.php");
-include("./post_articles.php");
-if (!isset($_SESSION['logUser'])) {
-    header("Location: ../auth/login.php");
-    exit();
-}
+include("../../config/config.php");
+include("../../services/db.php");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
+?>
+<?php
 if (isset($_GET['id'])) {
     $pID = intval($_GET['id']);
-    $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    if ($connected = $dbSrv->connect()) {
+    $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+    $connected = $db->connect();
+    if ($connected) {
         $result = $connected->query("SELECT a.id,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id=$pID");
         if ($result) {
             $postInfo = $result->fetch_assoc();
@@ -16,123 +19,55 @@ if (isset($_GET['id'])) {
             $date = new DateTimeImmutable($postInfo['datetime']);
             $date = $date->format('l jS \o\f F Y h:i A');
             $fullname = $postInfo['first_name'] . " " . $postInfo['last_name'];
+            echo "
+                {
+                    \"statusCode\": 200,
+                    \"status\": \"success\",
+                    \"data\": {
+                        \"postInfo\": {
+                            \"id\": " . $postInfo['id'] . ",
+                            \"content_path\": \"" . $postInfo['content_path'] . "\",
+                            \"genre_id_01\": " . $postInfo['genre_id_01'] . ",
+                            \"genre_id_02\": " . $postInfo['genre_id_02'] . ",
+                            \"genre_id_03\": " . $postInfo['genre_id_03'] . ",
+                            \"likes\": " . $postInfo['likes'] . ",
+                            \"stores\": " . $postInfo['stores'] . ",
+                            \"datetime\": \"" . $date . "\",
+                            \"first_name\": \"" . $postInfo['first_name'] . "\",
+                            \"last_name\": \"" . $postInfo['last_name'] . "\",
+                            \"email\": \"" . $postInfo['email'] . "\",
+                            \"genre\": \"" . $postInfo['genre'] . "\"
+                        },
+                        \"contentText\": \"" . $contentText . "\"
+                    }
+                }";
         }
-        $dbSrv->close();
+        $db->close();
     } else {
-        echo "problem";
+        echo "
+            {
+                \"statusCode\": 500,
+                \"status\": \"error\",
+                \"message\": \"Internal Server Error\"
+            }
+        ";
     }
 }
-
+?>
+<?php
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $newContent = $_POST['newContent'];
+    $data = $_POST['data'];
+    $newContent = $data['contentText'];
     $filename = "../../data/contents/" . $postInfo['content_path'];
     writeInFile($filename, $newContent);
     $_SESSION['newContent'] = $newContent;
     $_SESSION['edited'] = 1;
+    echo "
+        {
+            \"statusCode\": 200,
+            \"status\": \"success\",
+            \"message\": \"Content edited successfully\"
+        }
+    ";
 }
 ?>
-<main>
-
-    <div class="row justify-content-center align-items-center g-2">
-        <div class="alert alert-success alert-dismissible fade show col-10" role="alert" style="display:<?php if (isset($_SESSION['edited'])) {
-            echo "block";
-        } else {
-            echo "none";
-        } ?>;">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            <strong>Post Edited!</strong> The content of post has been edited with success!
-        </div>
-
-        <div class="col-10">
-            <div class='p-3 mb-4 bg-light rounded-3'>
-                <form action="<?php $_SERVER["PHP_SELF"] ?>" method="post">
-                    <div class='container-fluid py-5'>
-                        <div class='row justify-content-between align-items-center g-2'>
-                            <div class='col'>
-                                <span>Post ID: <?php if (isset($postInfo))
-                                    echo $postInfo['id'] ?></span>
-                                </div>
-                                <div class='col text-end'>
-                                    <span>Posted by: <?php if (isset($postInfo))
-                                    echo $fullname ?></span>
-                                </div>
-                            </div>
-                            <article class='row'>
-                                <h1 class='display-5 fw-bold'>
-                                <?php if (isset($postInfo))
-                                    echo ucfirst($postInfo['genre']); ?>
-                            </h1>
-
-                            <div class="mb-3">
-                                <textarea class="form-control resize-ta" name="newContent" height='fit-content'
-                                    rows="30"><?php
-                                    if (isset($postInfo) && !isset($_SESSION['newContent'])) {
-                                        echo $contentText;
-                                    } else {
-                                        echo $_SESSION['newContent'];
-                                        unset($_SESSION['newContent']);
-                                    } ?></textarea>
-                            </div>
-
-                        </article>
-                        <div class='row justify-content-between g-2'>
-                            <div class='col'>
-                                <span class='fs-4'>
-                                    <i class='fa-regular fa-thumbs-up'></i>
-                                    <?php if (isset($postInfo))
-                                        echo $postInfo['likes'] ?>
-                                    </span>
-                                </div>
-                                <div class='col text-end'>
-                                    <button class='btn btn-outline-primary btn-lg' type='submit'>Save</button>
-                                </div>
-                            </div>
-                            <div class='row text-end mt-4'>
-                                <span>Date posted: <?php if (isset($postInfo))
-                                        echo $date; ?></span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center align-items-center g-2">
-        <div class="col">
-
-        </div>
-    </div>
-</main>
-
-
-
-
-
-
-
-<?php
-include("../common/footer.php");
-?>
-
-<script>
-    // Dealing with Input width
-    let widthMachine = document.querySelector(".width-machine");
-
-    // Dealing with Textarea Height
-    function calcHeight(value)               let numberOfLineBreaks = (value.match(/\n/g) || []).le;
-    // min-height + lines x line-height + padding        order
-    let newHeight = 20 + numberOfLineBreaks * + 12 + 2;
-    return newHeight;
-    }
-
-    let textarea = document.querySelector(".resize-ta");
-    textarea.addEventListener        yup", () => {
-    textarea.style.height = calcHeight(textarea.valx    
-    });
-</script>
-
-<script>
-    var alertList = document.quer    electorAll('.alert');
-    alertList.f        ch(function (alert) {
-        neap.Alert(alert)
-    })
-</script>
