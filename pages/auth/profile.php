@@ -1,19 +1,19 @@
 <?php
 include_once '../common/header.php';
-	if(!isset($_SESSION['logUser'])){ //If user is not logged in, can't acess page.
-		header("Location: " . $baseName);
-		exit();
-  	}
+if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page.
+  header("Location: " . $baseName);
+  exit();
+}
 ?>
 <style>
-  body{
+  body {
     color: red;
   }
 </style>
 
 
-<?php 
-$dbSrv = new dbServices($mysql_host,$mysql_username,$mysql_password,$mysql_database);
+<?php
+$dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
 if ($dbcon = $dbSrv->dbConnect()) {
   $uID = intval($_SESSION['logUser']['id']);
   //Still have to change select, do group by probably. Its repeating bc of multiple articles
@@ -31,7 +31,7 @@ if ($dbcon = $dbSrv->dbConnect()) {
     $lDate = new DateTimeImmutable($lastLog['time']);
     $lDate = $lDate->format('jS \o\f F Y');
     // print_r($lastLog);
-  }else{
+  } else {
     echo "Errors in query </br>";
     print_r(mysqli_error($dbcon));
     exit();
@@ -45,10 +45,11 @@ $dbcon->close();
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col col-lg-9 col-xl-7">
         <div class="card">
-          <div class="rounded-top text-white d-flex flex-row align-items-center" style="background-color: #000; height:200px;">
+          <div class="rounded-top text-white d-flex flex-row align-items-center"
+            style="background-color: #000; height:200px;">
             <div class="ms-4 mt-1 d-flex flex-column align-items-center" style="width: 150px;">
-              <img src="<?php echo $baseName."data/images/profiles/".$userInfo['image_path'] ?>"
-                alt="Profile pic" class="img-fluid img-thumbnail text-danger text-center mb-2"
+              <img src="<?php echo $baseName . "data/images/profiles/" . $userInfo['image_path'] ?>" alt="Profile pic"
+                class="img-fluid img-thumbnail text-danger text-center mb-2"
                 style="width: 100px; z-index: 1; height: 100px; border-radius:50%;">
               <a href="<?php echo "./edit_profile.php" ?>" class="btn btn-outline-light" data-mdb-ripple-color="dark"
                 style="z-index: 1;">
@@ -57,20 +58,23 @@ $dbcon->close();
             </div>
             <div class="ms-3" style="margin-top: 0px;">
               <h5>
-                <?php echo $userInfo['first_name']." ".$userInfo['last_name'] ?>
+                <?php echo $userInfo['first_name'] . " " . $userInfo['last_name'] ?>
               </h5>
               <p>
                 <?php echo $userInfo['country'] ?>
               </p>
               <p>
-                <?php if($userInfo['age']) echo $userInfo['age'] . " years"; ?>
+                <?php if ($userInfo['age'])
+                  echo $userInfo['age'] . " years"; ?>
               </p>
             </div>
           </div>
           <div class="p-4 text-black" style="background-color: #f8f9fa;">
             <div class="d-flex justify-content-end text-center py-1">
               <div class="px-2">
-                <p class="mb-1 h5"><?php echo $uStats['postQty']; ?></p>
+                <p class="mb-1 h5">
+                  <?php echo $uStats['postQty']; ?>
+                </p>
                 <p class="small text-muted mb-0">Posts published</p>
               </div>
               <div class="px-2">
@@ -78,11 +82,15 @@ $dbcon->close();
                 <p class="small text-muted mb-0">Followers</p>
               </div>
               <div class="px-2">
-                <p class="mb-1 h5"><?php echo $uStats['rc_likes']; ?></p>
+                <p class="mb-1 h5">
+                  <?php echo $uStats['rc_likes']; ?>
+                </p>
                 <p class="small text-muted mb-0">Received Likes</p>
               </div>
               <div class="px-2">
-                <p class="mb-1 h5"><?php echo $uStats['rc_saves']; ?></p>
+                <p class="mb-1 h5">
+                  <?php echo $uStats['rc_saves']; ?>
+                </p>
                 <p class="small text-muted mb-0">Received posts saves</p>
               </div>
             </div>
@@ -92,9 +100,10 @@ $dbcon->close();
               <p class="lead fw-normal mb-1">About</p>
               <div class="p-4" style="background-color: #f8f9fa;">
                 <p class="font-italic mb-1">
-                  <?php if($lastLog['time']) echo "User since ".$lDate; ?>
+                  <?php if ($lastLog['time'])
+                    echo "User since " . $lDate; ?>
                 </p>
-                <p class="font-italic mb-1">From 
+                <p class="font-italic mb-1">From
                   <?php echo $userInfo['country'] ?>
                 </p>
               </div>
@@ -103,16 +112,16 @@ $dbcon->close();
               <p class="lead fw-normal mb-0">Recent posts</p>
             </div>
             <div class="d-flex flex-wrap g-2">
-              <?php 
-                if(isset($posts)){
-                  foreach($posts as $p){
-                    echo "
+              <?php
+              if (isset($posts)) {
+                foreach ($posts as $p) {
+                  echo "
                       <div class='p-2' >
-                        <a href='../articles/feed.php#post_".$p['postID']."' class='link-dark'>Post ID: ".$p['postID']." - ".$p['genre']."</a>
+                        <a href='../articles/feed.php#post_" . $p['postID'] . "' class='link-dark'>Post ID: " . $p['postID'] . " - " . $p['genre'] . "</a>
                       </div>
                     ";
-                  }
                 }
+              }
               ?>
             </div>
           </div>
