@@ -94,36 +94,36 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     if (move_uploaded_file($image['tmp_name'], $targetDir)) {
                         $imgurl = $targetDir;
                     } else
-                        echo "
-                        {
-                            \"statusCode\": 500,
-                            \"status\": \"error\",
-                            \"message\": \"Image is not uploaded\"
-                        }";
+                        $res = array(
+                            "statusCode" => 500,
+                            "status" => "error",
+                            "message" => "Image is not uploaded"
+                        );
+                    echo json_encode($res);
                     exit();
                 } else
-                    echo "
-                    {
-                        \"statusCode\": 500,
-                        \"status\": \"error\",
-                        \"message\": \"Please upload JPG/JPEG image file.\"
-                    }";
+                    $res = array(
+                        "statusCode" => 500,
+                        "status" => "error",
+                        "message" => "Please upload JPG/JPEG image file."
+                    );
+                echo json_encode($res);
                 exit();
             } else
-                echo "
-                {
-                    \"statusCode\": 500,
-                    \"status\": \"error\",
-                    \"message\": \"Please upload JPG/JPEG image file.\"
-                }";
+                $res = array(
+                    "statusCode" => 500,
+                    "status" => "error",
+                    "message" => "Please upload JPG/JPEG image file."
+                );
+            echo json_encode($res);
             exit();
         } else
-            echo "
-            {
-                \"statusCode\": 500,
-                \"status\": \"error\",
-                \"message\": \"Image is too big\"
-            }";
+            $res = array(
+                "statusCode" => 500,
+                "status" => "error",
+                "message" => "Image is too big"
+            );
+        echo json_encode($res);
         exit();
     }
 
@@ -151,20 +151,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $fieldArray = array('first_name', 'last_name', "email", 'password', 'gender', 'age', 'country', 'image_path', 'role');
         $result = $db->insert($tbName, $valuesArray, $fieldArray);
         $db->close();
-        echo "
-            {
-                \"statusCode\": 200,
-                \"status\": \"success\",
-                \"message\": \"User Registered Successfully\"
-            }";
+        $res = array(
+            "statusCode" => 200,
+            "status" => "success",
+            "message" => "User Registered Successfully"
+        );
+        echo json_encode($res);
         exit();
     } else {
-        echo "
-            {
-                \"statusCode\": 500,
-                \"status\": \"error\",
-                \"message\": \"Database Connection Error\"
-            }";
+        $res = array(
+            "statusCode" => 500,
+            "status" => "error",
+            "message" => "Database Connection Error"
+        );
+        echo json_encode($res);
         exit();
     }
 }

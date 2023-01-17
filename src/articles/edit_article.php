@@ -42,44 +42,39 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $db->close();
             $isEdit = editContent($postInfo, $content);
             if ($isEdit) {
-                echo "
-                        {
-                            \"statusCode\": 200,
-                            \"status\": \"success\",
-                            \"message\": \"Post edited successfully\"
-                        }
-                    ";
+                $res = array(
+                    "statusCode" => 200,
+                    "status" => "success",
+                    "message" => "Post edited successfully"
+                );
+                echo json_encode($res);
                 exit();
             } else {
-                echo "
-                        {
-                            \"statusCode\": 500,
-                            \"status\": \"Internal Server Error\",
-                            \"message\": \"Post not edited\"
-                        }
-                    ";
+                $res = array(
+                    "statusCode" => 500,
+                    "status" => "error",
+                    "message" => "Post not edited"
+                );
+                echo json_encode($res);
                 exit();
             }
         } else {
             $db->close();
-            echo "
-                    {
-                        \"statusCode\": 404,
-                        \"status\": \"Not Found\",
-                        \"message\": \"Post not found\"
-                    }
-                ";
+            $res = array(
+                "statusCode" => 404,
+                "status" => "error",
+                "message" => "Post not found"
+            );
+            echo json_encode($res);
             exit();
         }
-
     } else {
-        echo "
-            {
-                \"statusCode\": 500,
-                \"status\": \"Internal Server Error\",
-                \"message\": \"Database connection failed\"
-            }
-        ";
+        $res = array(
+            "statusCode" => 500,
+            "status" => "error",
+            "message" => "Database connection failed"
+        );
+        echo json_encode($res);
         exit();
     }
 }

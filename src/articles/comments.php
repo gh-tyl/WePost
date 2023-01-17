@@ -19,35 +19,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 		$comments = $comments->fetch_all(MYSQLI_ASSOC);
 		$db->close();
 		if ($comments) {
-			echo "
-			{
-				\"statusCode\": 200,
-				\"status\": \"success\",
-				\"data\": {
-					\"comments\": " . json_encode($comments) . ",
-				}
-			}";
+			$res = array(
+				"statusCode" => 200,
+				"status" => "success",
+				"data" => array(
+					"comments" => $comments
+				)
+			);
+			echo json_encode($res);
 			exit();
 		} else {
-			echo "
-			{
-				\"statusCode\": 204,
-				\"status\": \"No Content\",
-				\"data\": {
-					\"comments\": []
-				},
-			}";
+			$res = array(
+				"statusCode" => 204,
+				"status" => "No Content",
+				"data" => array(
+					"comments" => []
+				)
+			);
+			echo json_encode($res);
 			exit();
 		}
 	} else {
-		echo "
-		{
-			\"statusCode\": 500,
-			\"status\": \"Internal Server Error\",
-			\"data\": {
-				\"comments\": []
-			},
-		}";
+		$res = array(
+			"statusCode" => 500,
+			"status" => "Internal Server Error",
+			"data" => array(
+				"comments" => []
+			)
+		);
+		echo json_encode($res);
 		exit();
 	}
 }

@@ -15,35 +15,35 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $articles = $articles->fetch_all(MYSQLI_ASSOC);
         $db->close();
         if ($articles) {
-            echo "
-            {
-                \"statusCode\": 200,
-                \"status\": \"success\",
-                \"data\": {
-                    \"articles\": " . json_encode($articles) . ",
-                }
-            }";
+            $res = array(
+                "statusCode" => 200,
+                "status" => "success",
+                "data" => array(
+                    "articles" => $articles
+                )
+            );
+            echo json_encode($res);
             exit();
         } else {
-            echo "
-            {
-                \"statusCode\": 204,
-                \"status\": \"No Content\",
-                \"data\": {
-                    \"articles\": []
-                },
-            }";
+            $res = array(
+                "statusCode" => 204,
+                "status" => "No Content",
+                "data" => array(
+                    "articles" => []
+                )
+            );
+            echo json_encode($res);
             exit();
         }
     } else {
-        echo "
-        {
-            \"statusCode\": 500,
-            \"status\": \"Internal Server Error\",
-            \"data\": {
-                \"articles\": []
-            },
-        }";
+        $res = array(
+            "statusCode" => 500,
+            "status" => "Internal Server Error",
+            "data" => array(
+                "articles" => []
+            )
+        );
+        echo json_encode($res);
         exit();
     }
 }
