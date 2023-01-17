@@ -33,29 +33,29 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $dbConnected->close();
         if ($isInserted === TRUE) {
             $created = 1;
-            echo "
-            {
-                \"statusCode\": 200,
-                \"status\": \"success\",
-                \"message\": \"New record created successfully!\"
-            }";
+            $res = array(
+                "statusCode" => 200,
+                "status" => "success",
+                "message" => "New record created successfully!"
+            );
+            echo json_encode($res);
             exit();
         } else {
-            echo "
-            {
-                \"statusCode\": 500,
-                \"status\": \"error\",
-                \"message\": \"Internal Server Error\"
-            }";
+            $res = array(
+                "statusCode" => 500,
+                "status" => "error",
+                "message" => "Internal Server Error"
+            );
+            echo json_encode($res);
             exit();
         }
     } else {
-        echo "
-        {
-            \"statusCode\": 500,
-            \"status\": \"error\",
-            \"message\": \"Internal Server Error\"
-        }";
+        $res = array(
+            "statusCode" => 500,
+            "status" => "error",
+            "message" => "Internal Server Error"
+        );
+        echo json_encode($res);
         exit();
     }
 }

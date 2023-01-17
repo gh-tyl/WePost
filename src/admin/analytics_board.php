@@ -17,6 +17,7 @@ if ($connected) {
 	$likesSearch = $connected->query("SELECT a.id,a.likes,a.stores,a.datetime,u.first_name,u.last_name FROM article_table a INNER JOIN user_table u ON u.id = a.user_id");
 	$likesSearch = $likesSearch->fetch_all(MYSQLI_ASSOC);
 	$likesSel = $likesSel->fetch_all(MYSQLI_ASSOC);
+	$db->close();
 	$ranking_articles = [];
 	foreach ($likesSel as $post) {
 		$ranking_articles[$post['id']] = 0;
@@ -42,23 +43,26 @@ if ($connected) {
 	// echo ("</pre>");
 	arsort($ranking_users);
 	$ranking_users = array_slice($ranking_users, 0, 5, true);
-	echo "
-		{
-			\"statusCode\": 200,
-			\"status\": \"success\",
-			\"usersCount\": " . $usersCount->num_rows . ",
-			\"articlesCount\": " . $articleInfo->num_rows . ",
-			\"ranking_articles\": " . json_encode($ranking_articles) . ",
-			\"ranking_users\": " . json_encode($ranking_users) . "
-		}
-	";
+	$res = array(
+		"statusCode" => 200,
+		"status" => "success",
+		"usersCount" => $usersCount->num_rows,
+		"articlesCount" => $articleInfo->num_rows,
+		"ranking_articles" => $ranking_articles,
+		"ranking_users" => $ranking_users
+	);
+	echo json_encode($res);
+	exit();
 } else {
-	echo "
-		{
-			\"statusCode\": 500,
-			\"status\": \"error\",
-			\"message\": \"Error connecting to the database\"
-		}
-	";
+	$res = array(
+		"statusCode" => 500,
+		"status" => "Internal Server Error",
+		"usersCount" => 0,
+		"articlesCount" => 0,
+		"ranking_articles" => [],
+		"ranking_users" => []
+	);
+	echo json_encode($res);
+	exit();
 }
 ?>
