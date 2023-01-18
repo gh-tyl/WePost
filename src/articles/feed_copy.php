@@ -15,7 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $articles = $articles->fetch_all(MYSQLI_ASSOC);
         $db->close();
         if ($articles) {
-            echo(json_encode($articles));
+            $response = array(
+                "statusCode"=>200,
+                "status"=>"success",
+                "data"=> $article
+            );
+            echo(json_encode($response));
             // echo "
             // {
             //     \"statusCode\": 200,
