@@ -15,7 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $topics = $topics->fetch_all(MYSQLI_ASSOC);
         $db->close();
         if ($topics) {
-            echo(json_encode($topics));
+            $response = array(
+                "statusCode"=>200,
+                "status"=>"success",
+                "data"=> array("topics"=>$topics)
+            );
+            echo(json_encode($response));
             // echo "
             // {
             //     \"statusCode\": 200,
@@ -26,25 +31,37 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             // }";
             exit();
         } else {
-            echo "
-            {
-                \"statusCode\": 204,
-                \"status\": \"No Content\",
-                \"data\": {
-                    \"articles\": []
-                },
-            }";
+            $response = array(
+                "statusCode"=>204,
+                "status"=>"No Content",
+                "data"=> array("topics"=>$topics)
+            );
+            echo(json_encode($response));
+            // echo "
+            // {
+            //     \"statusCode\": 204,
+            //     \"status\": \"No Content\",
+            //     \"data\": {
+            //         \"articles\": []
+            //     },
+            // }";
             exit();
         }
     } else {
-        echo "
-        {
-            \"statusCode\": 500,
-            \"status\": \"Internal Server Error\",
-            \"data\": {
-                \"articles\": []
-            },
-        }";
+        $response = array(
+            "statusCode"=>500,
+            "status"=>"Internal Server Error",
+            "data"=> array("topics"=>$topics)
+        );
+        echo(json_encode($response));
+        // echo "
+        // {
+        //     \"statusCode\": 500,
+        //     \"status\": \"Internal Server Error\",
+        //     \"data\": {
+        //         \"articles\": []
+        //     },
+        // }";
         exit();
     }
 }
