@@ -7,7 +7,7 @@ header("Access-Control-Allow-Origin: http://localhost:3000");
 header('Access-Control-Allow-Methods:GET, POST');
 
 $postID = $_POST['post_id'];
-// $postID = 3;
+
 
 
 $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
@@ -18,16 +18,21 @@ if ($connected = $dbSrv->connect()) {
         $posts = $joinUsers->fetch_all(MYSQLI_ASSOC);
         $commentsArray = $commentsArray->fetch_all(MYSQLI_ASSOC);
         
-        $resAr = ["post" => "", "comments" => ""];
+        $resAr = ["post" => "", "comments" => "","content" => ""];
         $comments = [];
         foreach ($posts as $key=>$post) {
             if($post['id']== $postID){
                 $resAr["post"] = $post;
+                $contPath = "../../data/contents/".$post["content_path"];
+                $file = fopen($contPath,"r");
+                $data = fread($file,filesize($contPath));
+                fclose($file);
+                $resAr["content"] = $data;
+
             }
         }
         foreach ($commentsArray as  $key=>$comment) {
             if($comment['article_id']== $postID){
-                // $comments .= $comment;
                 array_push($comments, $comment);
             }
         }
