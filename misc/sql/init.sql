@@ -34,6 +34,7 @@ CREATE TABLE `WePostDB`.`article_table` (
   `genre_id_03` INT,
   `likes` INT NOT NULL,
   `stores` INT NOT NULL,
+  `is_deleted` INT NOT NULL,
   `datetime` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user_table`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,

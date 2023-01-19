@@ -28,37 +28,38 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	if ($dbConnected) {
 		$article = $dbConnected->query("SELECT a.id,a.title,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id = $article_id");
 		$article = $article->fetch_all(MYSQLI_ASSOC);
+		$db->close();
 		if ($article) {
-			$db->close();
-			echo "
-			{
-				\"statusCode\": 200,
-				\"status\": \"success\",
-				\"data\": {
-					\"article\": " . json_encode($article) . ",
-				}
-			}";
+			$article[0]['content'] = readThisFile($article[0]['content_path']);
+			$res = array(
+				"statusCode" => 200,
+				"status" => "success",
+				"data" => array(
+					"article" => $article
+				)
+			);
+			echo json_encode($res);
 			exit();
 		} else {
-			echo "
-			{
-				\"statusCode\": 204,
-				\"status\": \"No Content\",
-				\"data\": {
-					\"article\": []
-				},
-			}";
+			$res = array(
+				"statusCode" => 204,
+				"status" => "No Content",
+				"data" => array(
+					"article" => []
+				)
+			);
+			echo json_encode($res);
 			exit();
 		}
 	} else {
-		echo "
-		{
-			\"statusCode\": 500,
-			\"status\": \"Internal Server Error\",
-			\"data\": {
-				\"article\": []
-			},
-		}";
+		$res = array(
+			"statusCode" => 500,
+			"status" => "Internal Server Error",
+			"data" => array(
+				"article" => []
+			)
+		);
+		echo json_encode($res);
 		exit();
 	}
 }

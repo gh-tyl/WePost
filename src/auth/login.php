@@ -17,23 +17,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $userInfo = $db->select('user_table', array('*'), "email='$email'"); //Get the user login info in db
         if ($userInfo) {
             // create a token
-            $token = bin2hex(random_bytes(64));
+            // $token = bin2hex(random_bytes(64));
+            session_start();
+            $token = session_id();
             $userInfo = $userInfo->fetch_assoc(); //transform sql query result in associative array
             $db->close();
             if ($userInfo['password'] == $pass) { //Check form pass with password from db
-                echo "
-                    {
-                        \"statusCode\": 200,
-                        \"status\": \"success\",
-                        \"message\": \"Login successful\",
-                        \"isHashed\": false,
-                        \"data\": {
-                            \"token\": \"$token\"
-                        }
-                    }
-                    ";
-                // Add token to session
-                $_SESSION[$token] = $userInfo;
+                $res = array(
+                    'statusCode' => 200,
+                    'status' => 'success',
+                    'message' => 'Login successful',
+                    'isHashed' => false,
+                    'data' => array(
+                        'token' => $token
+                    )
+                );
+                $_SESSION['logUser'] = $userInfo;
+                // $_SESSION[$token] = $userInfo;
+                // print_r($_SESSION);
+                // print_r($_SESSION);
+                echo json_encode($res);
                 exit();
             } else {
                 $hashPass = password_verify($pass, $userInfo['password']); //verify password. If returns true means that password is correct

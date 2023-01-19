@@ -13,12 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $pass_orginal = $_POST['pass_orginal'];
     $pass_confirm = $_POST['pass_confirm'];
     if ($pass_orginal !== $pass_confirm) { //Check if both passwords are not matching
-        echo "
-            {
-                \"statusCode\": 400,
-                \"status\": \"error\",
-                \"message\": \"Passwords doesn't match. Try again\"
-            }";
+        $res = array(
+            "statusCode" => 400,
+            "status" => "error",
+            "message" => "Passwords doesn't match. Try again"
+        );
+        echo json_encode($res);
+        exit();
     } else {
         $db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
         $dbConnected = $db->connect();
@@ -29,20 +30,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             $result = $dbConnected->query("UPDATE user_table SET password='$pass_confirm' WHERE id=$uid;");
             $dbConnected->close();
             if ($result) { //Command to update password in db
-                echo "
-                    {
-                        \"statusCode\": 200,
-                        \"status\": \"success\",
-                        \"message\": \"Password updated\"
-                    }";
+                $res = array(
+                    "statusCode" => 200,
+                    "status" => "success",
+                    "message" => "Password updated"
+                );
+                echo json_encode($res);
                 exit();
             } else {
-                echo "
-                    {
-                        \"statusCode\": 500,
-                        \"status\": \"error\",
-                        \"message\": \"Internal server error\"
-                    }";
+                $res = array(
+                    "statusCode" => 500,
+                    "status" => "error",
+                    "message" => "Internal server error"
+                );
+                echo json_encode($res);
                 exit();
             }
         }

@@ -1,21 +1,17 @@
 <?php
 include("./post_comments.php");
 ?>
-
-<div id="">
-
-</div>
 <?php
 function generatePost($postInfoArray, $commentsArray = null)
 {
     include_once("../../config/config.php");
-    
+
     $contentText = readThisFile("../../data/contents/" . $postInfoArray['content_path']);
     $date = new DateTimeImmutable($postInfoArray['datetime']);
     $date = $date->format('l jS \o\f F Y h:i A');
     echo "
-        <div class='p-3 mb-4 bg-light rounded-3' id='post_".$postInfoArray['id']."''>
-        <form action='".$_SERVER['PHP_SELF']."?e=1&id=".$postInfoArray['id']."' method='post'>
+        <div class='p-3 mb-4 bg-light rounded-3' id='post_" . $postInfoArray['id'] . "''>
+        <form action='" . $_SERVER['PHP_SELF'] . "?e=1&id=" . $postInfoArray['id'] . "' method='post'>
             <div class='container-fluid py-5'>
                 <div class='row justify-content-between align-items-center g-2'>
                     <div class='col'>
