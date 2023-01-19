@@ -29,7 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'message' => 'Login successful',
                     'isHashed' => false,
                     'data' => array(
-                        'token' => $token
+                        'token' => $token,
+                        'role' => $userInfo["role"]
                     )
                 );
                 $_SESSION['logUser'] = $userInfo;
