@@ -1,13 +1,18 @@
 <?php
 include "../../config/config.php";
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Header: *');
+header('Content-Type: application/json');
 ?>
 <?php
 // INPUT: token
 // OUTPUT: statusCode, status
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$token = $_POST["token"];
-	if (session_id($token)) {
-		session_start();
+	session_id($token);
+	session_start();
+	if ($_SESSION['logUser']) {
 		unset($_SESSION['logUser']);
 		$res = array(
 			'statusCode' => 200,
