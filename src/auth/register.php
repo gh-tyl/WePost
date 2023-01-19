@@ -14,8 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $lname = $_POST['lname'];
     $email = $_POST['email'];
     $pass = $_POST['password'];
-    $image = $_FILES['image'];
-    $role = $_POST['role'];
+    $role = "User";
 
     // Optional Data Null check Logic
     if (isset($_POST['gender']))
@@ -81,51 +80,53 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     //         }";
     // }
 
-    // Uploaded Image Check Logic
-    if ($image['size'] == 0) {
-        $imgurl = null;
-    } else {
-        $targetDir = "../../data/images/profiles/";
-        if ($image['size'] < 1000000) {
-            // jpg or png
-            if ($image['type'] == "image/jpeg" || $image['type'] == "image/jpg" || $image['type'] == "image/png") {
-                if (getimagesize($image['tmp_name']) !== false) {
-                    $targetDir = $targetDir . $fname . $lname . rand(1, 10) . ".jpg";
-                    if (move_uploaded_file($image['tmp_name'], $targetDir)) {
-                        $imgurl = $targetDir;
-                    } else
-                        $res = array(
-                            "statusCode" => 500,
-                            "status" => "error",
-                            "message" => "Image is not uploaded"
-                        );
-                    echo json_encode($res);
-                    exit();
-                } else
-                    $res = array(
-                        "statusCode" => 500,
-                        "status" => "error",
-                        "message" => "Please upload JPG/JPEG image file."
-                    );
-                echo json_encode($res);
-                exit();
-            } else
-                $res = array(
-                    "statusCode" => 500,
-                    "status" => "error",
-                    "message" => "Please upload JPG/JPEG image file."
-                );
-            echo json_encode($res);
-            exit();
-        } else
-            $res = array(
-                "statusCode" => 500,
-                "status" => "error",
-                "message" => "Image is too big"
-            );
-        echo json_encode($res);
-        exit();
-    }
+    // // Uploaded Image Check Logic
+    // if ($image['size'] == 0) {
+    //     $imgurl = null;
+    // } else {
+    //     $targetDir = "../../data/images/profiles/";
+    //     if ($image['size'] < 1000000) {
+    //         // jpg or png
+    //         if ($image['type'] == "image/jpeg" || $image['type'] == "image/jpg" || $image['type'] == "image/png") {
+    //             if (getimagesize($image['tmp_name']) !== false) {
+    //                 $targetDir = $targetDir . $fname . $lname . rand(1, 10) . ".jpg";
+    //                 if (move_uploaded_file($image['tmp_name'], $targetDir)) {
+    //                     $imgurl = $targetDir;
+    //                 } else
+    //                     $res = array(
+    //                         "statusCode" => 500,
+    //                         "status" => "error",
+    //                         "message" => "Image is not uploaded"
+    //                     );
+    //                 echo json_encode($res);
+    //                 exit();
+    //             } else
+    //                 $res = array(
+    //                     "statusCode" => 500,
+    //                     "status" => "error",
+    //                     "message" => "Please upload JPG/JPEG image file."
+    //                 );
+    //             echo json_encode($res);
+    //             exit();
+    //         } else
+    //             $res = array(
+    //                 "statusCode" => 500,
+    //                 "status" => "error",
+    //                 "message" => "Please upload JPG/JPEG image file."
+    //             );
+    //         echo json_encode($res);
+    //         exit();
+    //     } else
+    //         $res = array(
+    //             "statusCode" => 500,
+    //             "status" => "error",
+    //             "message" => "Image is too big"
+    //         );
+    //     echo json_encode($res);
+    //     exit();
+    // }
+    // Image path is null
+    $imgurl = null;
 
     // Password Hash Logic
     $pass = password_hash($pass, PASSWORD_DEFAULT);
