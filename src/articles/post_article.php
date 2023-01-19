@@ -26,7 +26,6 @@ if ($connected = $dbSrv->connect()) {
                 $data = fread($file, filesize($contPath));
                 fclose($file);
                 $resAr["content"] = $data;
-
             }
         }
         foreach ($commentsArray as $key => $comment) {
