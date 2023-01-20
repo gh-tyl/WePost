@@ -15,20 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $articles = $articles->fetch_all(MYSQLI_ASSOC);
         $db->close();
         if ($articles) {
-            $response = array(
-                "statusCode"=>200,
-                "status"=>"success",
-                "data"=> $article
-            );
-            echo(json_encode($response));
-            // echo "
-            // {
-            //     \"statusCode\": 200,
-            //     \"status\": \"success\",
-            //     \"data\": {
-            //         \"articles\":" . json_encode($articles) . ",
-            //     }
-            // }";
+            echo "
+            {
+                \"statusCode\": 200,
+                \"status\": \"success\",
+                \"data\": {
+                    \"articles\":" . json_encode($articles) ."
+                }
+            }";
             exit();
         } else {
             echo "
