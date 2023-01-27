@@ -8,18 +8,18 @@ if (!isset($_SESSION['logUser'])) { //If user is not logged in, can't acess page
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	$selTopic = $_POST['selTopic'];
-	$dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-	if ($dbSrv->connect()) {
-		$connected = $dbSrv->connect();
+	$db = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
+	if ($db->connect()) {
+		$connected = $db->connect();
 		switch ($selTopic) {
 			case 'posts':
 				# code...
 				break;
 
 			case 'users':
-				$usersCount = $dbSrv->select('user_table', ['id'], "user_table.role='user'");
-				$articleInfo = $dbSrv->select('article_table', ['id', 'user_id', 'likes', 'stores', 'datetime']);
-				$likesSel = $dbSrv->select('article_table', ['id', 'user_id', 'likes']);
+				$usersCount = $db->select('user_table', ['id'], "user_table.role='user'");
+				$articleInfo = $db->select('article_table', ['id', 'user_id', 'likes', 'stores', 'datetime']);
+				$likesSel = $db->select('article_table', ['id', 'user_id', 'likes']);
 				$likesSearch = $connected->query("SELECT a.id,a.likes,a.stores,a.datetime,u.first_name,u.last_name FROM article_table a INNER JOIN user_table u ON u.id = a.user_id");
 				$likesSearch = $likesSearch->fetch_all(MYSQLI_ASSOC);
 				$maxLikes = 0;

@@ -8,8 +8,8 @@ if (!isset($_SESSION['logUser'])) {
 if (isset($_GET['id'])) {
     $pID = intval($_GET['id']);
     $dbSrv = new dbServices($mysql_host, $mysql_username, $mysql_password, $mysql_database);
-    if ($dbConnected = $dbSrv->dbConnect()) {
-        $result = $dbConnected->query("SELECT a.id,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id=$pID");
+    if ($connected = $dbSrv->connect()) {
+        $result = $connected->query("SELECT a.id,a.content_path,a.genre_id_01,a.genre_id_02,a.genre_id_03,a.likes,a.stores,a.datetime,u.first_name,u.last_name,u.email,g.genre FROM article_table a INNER JOIN user_table u ON u.id = a.user_id INNER JOIN genre_table g ON g.id = a.genre_id_01 WHERE a.id=$pID");
         if ($result) {
             $postInfo = $result->fetch_assoc();
             $contentText = readThisFile("../../data/contents/" . $postInfo['content_path']);
@@ -17,7 +17,7 @@ if (isset($_GET['id'])) {
             $date = $date->format('l jS \o\f F Y h:i A');
             $fullname = $postInfo['first_name'] . " " . $postInfo['last_name'];
         }
-        $dbSrv->closeDb();
+        $dbSrv->close();
     } else {
         echo "problem";
     }
@@ -51,14 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             <div class='col'>
                                 <span>Post ID: <?php if (isset($postInfo))
                                     echo $postInfo['id'] ?></span>
-                            </div>
-                            <div class='col text-end'>
-                                <span>Posted by: <?php if (isset($postInfo))
+                                </div>
+                                <div class='col text-end'>
+                                    <span>Posted by: <?php if (isset($postInfo))
                                     echo $fullname ?></span>
+                                </div>
                             </div>
-                        </div>
-                        <article class='row'>
-                            <h1 class='display-5 fw-bold'>
+                            <article class='row'>
+                                <h1 class='display-5 fw-bold'>
                                 <?php if (isset($postInfo))
                                     echo ucfirst($postInfo['genre']); ?>
                             </h1>
@@ -81,15 +81,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     <i class='fa-regular fa-thumbs-up'></i>
                                     <?php if (isset($postInfo))
                                         echo $postInfo['likes'] ?>
-                                </span>
+                                    </span>
+                                </div>
+                                <div class='col text-end'>
+                                    <button class='btn btn-outline-primary btn-lg' type='submit'>Save</button>
+                                </div>
                             </div>
-                            <div class='col text-end'>
-                                <button class='btn btn-outline-primary btn-lg' type='submit'>Save</button>
-                            </div>
-                        </div>
-                        <div class='row text-end mt-4'>
-                            <span>Date posted: <?php if (isset($postInfo))
-                                echo $date; ?></span>
+                            <div class='row text-end mt-4'>
+                                <span>Date posted: <?php if (isset($postInfo))
+                                        echo $date; ?></span>
                         </div>
                     </div>
                 </form>
@@ -118,21 +118,21 @@ include("../common/footer.php");
     let widthMachine = document.querySelector(".width-machine");
 
     // Dealing with Textarea Height
-    function calcHeight(value)               let numberOfLineBreaks = (value.match(/\n/g) || []).le        ;
-        // min-height + lines x line-height + padding        order
-        let newHeight = 20 + numberOfLineBreaks *        + 12 + 2;
-        return newHeight;
+    function calcHeight(value)               let numberOfLineBreaks = (value.match(/\n/g) || []).le;
+    // min-height + lines x line-height + padding        order
+    let newHeight = 20 + numberOfLineBreaks * + 12 + 2;
+    return newHeight;
     }
 
     let textarea = document.querySelector(".resize-ta");
     textarea.addEventListener        yup", () => {
-        textarea.style.height = calcHeight(textarea.valx    
+    textarea.style.height = calcHeight(textarea.valx    
     });
 </script>
 
 <script>
     var alertList = document.quer    electorAll('.alert');
     alertList.f        ch(function (alert) {
-          neap.Alert(alert)
+        neap.Alert(alert)
     })
 </script>

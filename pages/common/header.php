@@ -35,48 +35,48 @@ include("../../services/db.php");
 				<ul class="navbar-nav me-auto mt-2 mt-lg-0">
 					</li>
 					<li class="nav-item active" style="display:<?php if (isset($_SESSION['logUser'])) {
-	                    echo "none";
-                    } else {
-	                    echo "block";
-                    } ?>;">
+						echo "none";
+					} else {
+						echo "block";
+					} ?>;">
 						<a class="nav-link" href="<?php echo "../auth/login.php" ?>">Login</a>
 					</li>
 					<li class="nav-item" style="display:<?php if (isset($_SESSION['logUser'])) {
-	                    echo "block";
-                    } else {
-	                    echo "none";
-                    } ?>;">
+						echo "block";
+					} else {
+						echo "none";
+					} ?>;">
 						<a class="nav-link" href="<?php echo "../auth/register.php" ?>">Register</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="<?php echo "../articles/feed.php" ?>" aria-current="page">Feed</a>
 					<li class="nav-item" style="display:<?php if (isset($_SESSION['logUser'])) {
-	                    echo "block";
-                    } else {
-	                    echo "none";
-                    } ?>;">
+						echo "block";
+					} else {
+						echo "none";
+					} ?>;">
 						<a class="nav-link" href="<?php echo "../articles/new_post.php" ?>">New Post</a>
 					</li>
 					<li class="nav-item" style="display:<?php if (isset($_SESSION['logUser'])) {
-	                    echo "block";
-                    } else {
-	                    echo "none";
-                    } ?>;">
+						echo "block";
+					} else {
+						echo "none";
+					} ?>;">
 						<a class="nav-link" href="<?php echo $baseName . "pages/auth/profile.php" ?>">Profile</a>
 					</li>
 					<li class="nav-item" style="display:<?php if (isset($_SESSION['logUser']) && $_SESSION['logUser']['role'] == "Admin") {
-	                    echo "block";
-                    } else {
-	                    echo "none";
-                    } ?>;">
+						echo "block";
+					} else {
+						echo "none";
+					} ?>;">
 						<a class="nav-link" href="<?php echo "../admin/analytics_board.php" ?>">Analytics
 							Board</a>
 					</li>
 					<li class="nav-item" style="display:<?php if (isset($_SESSION['logUser'])) {
-	                    echo "block";
-                    } else {
-	                    echo "none";
-                    } ?>;">
+						echo "block";
+					} else {
+						echo "none";
+					} ?>;">
 						<a class="nav-link" href="<?php echo "../auth/logout.php" ?>">Logout</a>
 					</li>
 				</ul>

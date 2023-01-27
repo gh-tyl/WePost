@@ -27,12 +27,14 @@ DROP TABLE IF EXISTS `article_table`;
 CREATE TABLE `WePostDB`.`article_table` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
+  `title` VARCHAR(50) NOT NULL,
   `content_path` VARCHAR(200) NOT NULL,
   `genre_id_01` INT NOT NULL,
   `genre_id_02` INT,
   `genre_id_03` INT,
   `likes` INT NOT NULL,
   `stores` INT NOT NULL,
+  `is_deleted` INT NOT NULL,
   `datetime` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `user_table`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -124,9 +126,9 @@ CREATE INDEX `user_id` ON `follow_table` (`user_id`);
 CREATE INDEX `follow_user_id` ON `follow_table` (`follow_user_id`);
 CREATE INDEX `user_id` ON `login_table` (`user_id`);
 
-insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1000, 'Rikki', 'Balthasar', 'rbalthasar0@xinhuanet.com', 'icojbDbFH1T', null, 30, 'Japan', null, 'Admin');
-insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1001, 'Fey', 'Grimes', 'test@mail.com', 'test', 'Female', 20, 'Japan', 'pic1.jpg', 'User');
-insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1002, 'Faustina', 'Hedger', 'fhedger2@surveymonkey.com', 'TFI5eeqAC', 'Female', 20, 'Russia', 'pic1.jpg', 'User');
+insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1000, 'admin', 'lname', 'admin@admin.com', 'admin', null, 30, 'Japan', null, 'Admin');
+insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1001, 'user1', 'lname', 'user1@user1.com', 'user1', 'Female', 20, 'Japan', 'pic1.jpg', 'User');
+insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1002, 'user2', 'lname', 'user2@user2.com', 'user2', 'Female', 20, 'Russia', 'pic1.jpg', 'User');
 insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1003, 'Brigham', 'Ranger', 'branger3@shareasale.com', 'yYINwhzx', 'Male', 20, 'Iran', 'pic2.jpg', 'User');
 insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1004, 'Matty', 'Munning', 'mmunning4@nymag.com', 'VixavgM0xcE', 'Male', 20, 'Indonesia', 'pic2.jpg', 'User');
 insert into user_table (id, first_name, last_name, email, password, gender, age, country, image_path, role) values (1005, 'Tobe', 'Radcliffe', 'tradcliffe5@imageshack.us', 'IzY9jAqrFfs', null, 33, 'Sweden', 'pic2.jpg', 'User');
@@ -166,36 +168,36 @@ insert into genre_table (id, genre) values (18, 'cleggotth');
 insert into genre_table (id, genre) values (19, 'jbedminsteri');
 insert into genre_table (id, genre) values (20, 'jrussej');
 
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (1, 1010, 'post_1.txt', 8, 16, 1, 23, 49, '2022-07-31 21:43:16');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (2, 1003, 'post_2.txt', 8, 15, 6, 89, 90, '2022-05-09 21:57:00');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (3, 1005, 'post_3.txt', 8, 14, 5, 98, 22, '2022-09-07 14:32:42');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (4, 1003, 'post_4.txt', 8, 10, 11, 66, 12, '2021-12-02 09:28:22');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (5, 1001, 'test.txt', 8, 11, 10, 6, 76, '2022-10-01 20:46:50');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (6, 1010, 'test.txt', 8, 10, 11, 25, 77, '2022-12-11 03:22:14');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (7, 1008, 'test.txt', 13, 12, 14, 88, 79, '2022-02-10 08:30:44');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (8, 1010, 'test.txt', 14, 12, 18, 91, 46, '2022-09-02 19:58:47');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (9, 1007, 'test.txt', 7, 8, 2, 3, 80, '2022-08-21 02:08:53');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (10, 1009, 'test.txt', 4, 14, 18, 81, 48, '2021-12-07 07:26:32');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (11, 1011, 'test.txt', 3, 8, 6, 15, 58, '2022-10-23 04:55:27');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (12, 1011, 'test.txt', 3, 5, 1, 65, 30, '2022-09-09 10:53:42');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (13, 1013, 'test.txt', 17, 12, 11, 61, 77, '2022-09-23 16:12:23');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (14, 1016, 'test.txt', 9, 11, 7, 34, 96, '2022-04-27 19:31:02');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (15, 1003, 'test.txt', 15, 11, 7, 10, 50, '2022-06-24 22:22:18');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (16, 1008, 'test.txt', 17, 3, 14, 15, 48, '2022-01-22 23:50:38');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (17, 1000, 'test.txt', 18, 7, 2, 61, 82, '2022-03-17 03:49:59');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (18, 1009, 'test.txt', 15, 2, 20, 89, 95, '2022-11-23 18:40:43');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (19, 1017, 'test.txt', 9, 11, 20, 83, 50, '2022-06-03 21:54:03');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (20, 1002, 'test.txt', 17, 14, 20, 20, 58, '2022-12-20 08:23:35');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (21, 1019, 'test.txt', 9, 19, 14, 12, 40, '2022-06-06 12:21:40');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (22, 1006, 'test.txt', 3, 9, 16, 87, 35, '2022-07-26 08:16:55');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (23, 1016, 'test.txt', 7, 9, 12, 58, 56, '2021-12-27 08:04:50');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (24, 1004, 'test.txt', 2, 12, 20, 19, 64, '2021-12-14 20:37:06');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (25, 1010, 'test.txt', 5, 3, 1, 58, 40, '2022-11-10 13:01:13');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (26, 1009, 'test.txt', 4, 16, 2, 36, 11, '2022-09-13 10:14:42');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (27, 1019, 'test.txt', 4, 6, 3, 75, 71, '2022-10-31 09:34:49');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (28, 1011, 'test.txt', 2, 6, 20, 83, 27, '2022-09-14 22:52:07');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (29, 1014, 'test.txt', 8, 2, 10, 52, 18, '2022-10-02 07:24:16');
-insert into article_table (id, user_id, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, datetime) values (30, 1012, 'test.txt', 9, 11, 2, 42, 70, '2022-10-15 08:34:52');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (1, 1010, 'title', 'post_1.txt', 2, 16, 1, 23, 49, 0, '2022-07-31 21:43:16');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (2, 1003, 'title', 'post_2.txt', 2, 15, 6, 89, 90, 0, '2022-05-09 21:57:00');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (3, 1005, 'title', 'post_3.txt', 2, 14, 5, 98, 22, 1, '2022-09-07 14:32:42');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (4, 1003, 'title', 'post_4.txt', 4, 10, 11, 66, 12, 0, '2021-12-02 09:28:22');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (5, 1001, 'title', 'test.txt', 14, 11, 10, 6, 76, 0, '2022-10-01 20:46:50');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (6, 1010, 'title', 'test.txt', 12, 10, 11, 25, 77, 0, '2022-12-11 03:22:14');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (7, 1008, 'title', 'test.txt', 13, 12, 14, 88, 79, 0, '2022-02-10 08:30:44');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (8, 1010, 'title', 'test.txt', 14, 12, 18, 91, 46, 0, '2022-09-02 19:58:47');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (9, 1007, 'title', 'test.txt', 7, 8, 2, 3, 80, 0, '2022-08-21 02:08:53');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (10, 1009, 'title', 'test.txt', 4, 14, 18, 81, 48, 0, '2021-12-07 07:26:32');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (11, 1011, 'title', 'test.txt', 3, 8, 6, 15, 58, 0, '2022-10-23 04:55:27');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (12, 1011, 'title', 'test.txt', 3, 5, 1, 65, 30, 0, '2022-09-09 10:53:42');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (13, 1013, 'title', 'test.txt', 17, 12, 11, 61, 77, 0, '2022-09-23 16:12:23');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (14, 1016, 'title', 'test.txt', 9, 11, 7, 34, 96, 0, '2022-04-27 19:31:02');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (15, 1003, 'title', 'test.txt', 15, 11, 7, 10, 50, 0, '2022-06-24 22:22:18');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (16, 1008, 'title', 'test.txt', 17, 3, 14, 15, 48, 0, '2022-01-22 23:50:38');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (17, 1000, 'title', 'test.txt', 18, 7, 2, 61, 82, 0, '2022-03-17 03:49:59');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (18, 1009, 'title', 'test.txt', 15, 2, 20, 89, 95, 0, '2022-11-23 18:40:43');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (19, 1017, 'title', 'test.txt', 9, 11, 20, 83, 50, 0, '2022-06-03 21:54:03');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (20, 1002, 'title', 'test.txt', 17, 14, 20, 20, 58, 0, '2022-12-20 08:23:35');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (21, 1019, 'title', 'test.txt', 9, 19, 14, 12, 40, 0, '2022-06-06 12:21:40');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (22, 1006, 'title', 'test.txt', 3, 9, 16, 87, 35, 0, '2022-07-26 08:16:55');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (23, 1016, 'title', 'test.txt', 7, 9, 12, 58, 56, 0, '2021-12-27 08:04:50');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (24, 1004, 'title', 'test.txt', 2, 12, 20, 19, 64, 0, '2021-12-14 20:37:06');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (25, 1010, 'title', 'test.txt', 5, 3, 1, 58, 40, 0, '2022-11-10 13:01:13');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (26, 1009, 'title', 'test.txt', 4, 16, 2, 36, 11, 0, '2022-09-13 10:14:42');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (27, 1019, 'title', 'test.txt', 4, 6, 3, 75, 71, 0, '2022-10-31 09:34:49');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (28, 1011, 'title', 'test.txt', 2, 6, 20, 83, 27, 0, '2022-09-14 22:52:07');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (29, 1014, 'title', 'test.txt', 8, 2, 10, 52, 18, 0, '2022-10-02 07:24:16');
+insert into article_table (id, user_id, title, content_path, genre_id_01, genre_id_02, genre_id_03, likes, stores, is_deleted, datetime) values (30, 1012, 'title', 'test.txt', 9, 11, 2, 42, 70, 0, '2022-10-15 08:34:52');
 
 insert into article_pic_table (id, article_id, json_path) values (1, 1, '/path/to/file');
 insert into article_pic_table (id, article_id, json_path) values (2, 2, '/path/to/file');
